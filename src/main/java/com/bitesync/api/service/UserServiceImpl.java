@@ -1,5 +1,6 @@
 package com.bitesync.api.service;
 
+import com.bitesync.api.entity.User;
 import com.bitesync.api.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,4 +9,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
+
+    public void signupUser(User user) {
+        userRepository.save(user);
+    }
 }
