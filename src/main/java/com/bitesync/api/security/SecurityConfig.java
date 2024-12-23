@@ -1,5 +1,6 @@
 package com.bitesync.api.security;
 
+import com.bitesync.api.security.filter.AuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
+        authenticationFilter.setFilterProcessesUrl("/user/authenticate");
         http
                 .csrf(csrf -> csrf.disable())
                 .headers((headers) -> headers
