@@ -36,29 +36,29 @@ public class InventoryItem {
   private Long id;
 
   @NonNull
-  @NotBlank(message = "name cannot be blank")
+  @NotBlank(message = "inventory item name cannot be blank")
   @Column(name = "name")
   private String name;
 
   @NonNull
-  @NotBlank(message = "image url cannot be blank")
+  @NotBlank(message = "inventory item image url cannot be blank")
   @Column(name = "image_url")
   private String imageUrl;
 
   @NonNull
-  @NotNull(message = "quantity cannot be null")
+  @NotNull(message = "inventory item quantity cannot be null")
   @PositiveOrZero(message = "quantity must be 0 or greater")
   @Column(name = "quantity")
   private Integer quantity;
 
   @NonNull
-  @NotNull(message = "unit price cannot be null")
+  @NotNull(message = "inventory item unit price cannot be null")
   @Positive(message = "unit price must be greater than 0")
   @Column(name = "unit_price")
   private BigDecimal unitPrice;
 
   @NonNull
-  @NotBlank(message = "category cannot be blank")
+  @NotBlank(message = "inventory item category cannot be blank")
   @Column(name = "category")
   private String category;
 
