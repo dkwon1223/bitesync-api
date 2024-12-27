@@ -1,8 +1,10 @@
 package com.bitesync.api.service;
 
 import com.bitesync.api.entity.MenuItem;
+import com.bitesync.api.entity.User;
 import com.bitesync.api.exception.EntityNotFoundException;
 import com.bitesync.api.repository.MenuItemRepository;
+import com.bitesync.api.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import java.util.Optional;
 public class MenuItemServiceImpl implements MenuItemService {
 
   private MenuItemRepository menuItemRepository;
+  private UserRepository userRepository;
+  private UserServiceImpl userServiceImpl;
 
   @Override
   public List<MenuItem> findAllMenuItems() {
@@ -22,13 +26,19 @@ public class MenuItemServiceImpl implements MenuItemService {
   }
 
   @Override
-  public MenuItem findMenuItemById(Long id) {
-    Optional<MenuItem> menuItem = menuItemRepository.findById(id);
-    return unwrapMenuItem(menuItem, id);
+  public MenuItem findMenuItemByUserIdAndMenuItemId(Long userId, Long menuItemId) {
+    Optional<MenuItem> menuItem = menuItemRepository.findById(menuItemId);
+    MenuItem targetMenuItem = unwrapMenuItem(menuItem, menuItemId);
+    Optional<User> user = userRepository.findById(userId);
+    User targetUser = userServiceImpl.unwrapUser(user, userId);
+    return menuItemRepository.findMenuItemByUserIdAndId(targetUser.getId(), targetMenuItem.getId());
   }
 
   @Override
-  public MenuItem saveMenuItem(MenuItem menuItem) {
+  public MenuItem saveMenuItem(Long userId, MenuItem menuItem) {
+    Optional<User> user = userRepository.findById(userId);
+    User targetUser = userServiceImpl.unwrapUser(user, userId);
+    menuItem.setUser(targetUser);
     return menuItemRepository.save(menuItem);
   }
 

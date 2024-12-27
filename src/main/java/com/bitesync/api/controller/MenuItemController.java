@@ -29,14 +29,14 @@ public class MenuItemController {
     return new ResponseEntity<>(menuItemService.findAllMenuItems(), HttpStatus.OK);
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<MenuItem> getMenuItemById(@PathVariable Long id) {
-    return new ResponseEntity<>(menuItemService.findMenuItemById(id), HttpStatus.OK);
+  @GetMapping("/user/{userId}/item/{menuItemId}")
+  public ResponseEntity<MenuItem> getMenuItemById(@PathVariable Long userId, @PathVariable Long menuItemId) {
+    return new ResponseEntity<>(menuItemService.findMenuItemByUserIdAndMenuItemId(userId, menuItemId), HttpStatus.OK);
   }
 
-  @PostMapping
-  public ResponseEntity<MenuItem> createMenuItem(@Valid @RequestBody MenuItem menuItem) {
-    return new ResponseEntity<>(menuItemService.saveMenuItem(menuItem), HttpStatus.CREATED);
+  @PostMapping("/user/{userId}")
+  public ResponseEntity<MenuItem> createMenuItem(@Valid @RequestBody MenuItem menuItem, @PathVariable Long userId) {
+    return new ResponseEntity<>(menuItemService.saveMenuItem(userId, menuItem), HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")
