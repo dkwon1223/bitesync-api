@@ -9,4 +9,5 @@ public interface OrderItemService {
   List<OrderItem> findAllOrderItems();
   OrderItem findOrderItemById(Long id);
   OrderItem updateOrderItem(Long id, OrderItem orderItem);
+  void deleteOrderItem(Long id);
 }

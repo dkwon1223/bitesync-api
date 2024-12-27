@@ -5,6 +5,7 @@ import com.bitesync.api.service.OrderItemService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,5 +41,11 @@ public class OrderItemController {
   @PutMapping("/{id}")
   public ResponseEntity<OrderItem> updateOrderItem(@PathVariable Long id, @RequestBody OrderItem orderItem) {
     return new ResponseEntity<>(orderItemService.updateOrderItem(id, orderItem), HttpStatus.OK);
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<OrderItem> deleteOrderItem(@PathVariable Long id) {
+    orderItemService.deleteOrderItem(id);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }

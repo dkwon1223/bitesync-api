@@ -42,6 +42,11 @@ public class OrderItemServiceImpl implements OrderItemService {
         .orElseThrow(() -> new EntityNotFoundException(id, OrderItem.class));
   }
 
+  @Override
+  public void deleteOrderItem(Long id) {
+    orderItemRepository.deleteById(id);
+  }
+
   static OrderItem unwrapOrderItem(Optional<OrderItem> entity, Long id) {
     if(entity.isPresent()) {
       return entity.get();
