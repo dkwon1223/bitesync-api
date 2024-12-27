@@ -4,4 +4,5 @@ import com.bitesync.api.entity.InventoryItem;
 
 public interface InventoryItemService {
   InventoryItem saveInventoryItem(InventoryItem inventoryItem);
+  InventoryItem getInventoryItemById(Long id);
 }
