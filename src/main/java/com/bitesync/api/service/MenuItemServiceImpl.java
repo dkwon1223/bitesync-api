@@ -3,6 +3,7 @@ package com.bitesync.api.service;
 import com.bitesync.api.entity.MenuItem;
 import com.bitesync.api.entity.User;
 import com.bitesync.api.exception.EntityNotFoundException;
+import com.bitesync.api.exception.MenuItemNotFoundException;
 import com.bitesync.api.repository.MenuItemRepository;
 import com.bitesync.api.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -26,12 +27,11 @@ public class MenuItemServiceImpl implements MenuItemService {
   }
 
   @Override
-  public MenuItem findMenuItemByUserIdAndMenuItemId(Long userId, Long menuItemId) {
-    Optional<MenuItem> menuItem = menuItemRepository.findById(menuItemId);
-    MenuItem targetMenuItem = unwrapMenuItem(menuItem, menuItemId);
+  public MenuItem findMenuItemByUserIdAndMenuItemId(Long userId, Long menuItemId) throws MenuItemNotFoundException {
     Optional<User> user = userRepository.findById(userId);
     User targetUser = userServiceImpl.unwrapUser(user, userId);
-    return menuItemRepository.findMenuItemByUserIdAndId(targetUser.getId(), targetMenuItem.getId());
+    Optional<MenuItem> menuItem = menuItemRepository.findMenuItemByUserIdAndId(menuItemId, targetUser.getId());
+    return unwrapMenuItem(menuItem, userId, menuItemId);
   }
 
   @Override
@@ -43,8 +43,8 @@ public class MenuItemServiceImpl implements MenuItemService {
   }
 
   @Override
-  public MenuItem updateMenuItem(Long id, MenuItem menuItem) {
-    return menuItemRepository.findById(id)
+  public MenuItem updateMenuItem(Long userId, Long menuItemId, MenuItem menuItem) {
+    return menuItemRepository.findMenuItemByUserIdAndId(userId, menuItemId)
       .map(existingItem -> {
         existingItem.setName(menuItem.getName());
         existingItem.setImageUrl(menuItem.getImageUrl());
@@ -54,7 +54,7 @@ public class MenuItemServiceImpl implements MenuItemService {
         existingItem.setAvailable(menuItem.getAvailable());
         return menuItemRepository.save(existingItem);
       })
-      .orElseThrow(() -> new EntityNotFoundException(id, MenuItem.class));
+      .orElseThrow(() -> new MenuItemNotFoundException(userId, menuItemId));
   }
 
   @Override
@@ -62,11 +62,11 @@ public class MenuItemServiceImpl implements MenuItemService {
     menuItemRepository.deleteById(id);
   }
 
-  static MenuItem unwrapMenuItem(Optional<MenuItem> entity, Long id) {
+  static MenuItem unwrapMenuItem(Optional<MenuItem> entity, Long userId, Long menuItemId) {
     if (entity.isPresent()) {
       return entity.get();
     } else {
-      throw new EntityNotFoundException(id, MenuItem.class);
+      throw new MenuItemNotFoundException(userId, menuItemId);
     }
   }
 

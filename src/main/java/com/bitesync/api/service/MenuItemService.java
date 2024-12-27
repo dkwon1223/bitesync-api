@@ -8,6 +8,6 @@ public interface MenuItemService {
   MenuItem saveMenuItem(Long userId, MenuItem menuItem);
   List<MenuItem> findAllMenuItems();
   MenuItem findMenuItemByUserIdAndMenuItemId(Long userId, Long menuItemId);
-  MenuItem updateMenuItem(Long id, MenuItem menuItem);
+  MenuItem updateMenuItem(Long userId, Long menuItemId, MenuItem menuItem);
   void deleteMenuItem(Long id);
 }

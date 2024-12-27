@@ -39,9 +39,9 @@ public class MenuItemController {
     return new ResponseEntity<>(menuItemService.saveMenuItem(userId, menuItem), HttpStatus.CREATED);
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<MenuItem> updateMenuItem(@PathVariable Long id, @Valid @RequestBody MenuItem menuItem) {
-    return new ResponseEntity<>(menuItemService.updateMenuItem(id, menuItem), HttpStatus.OK);
+  @PutMapping("/user/{userId}/item/{menuItemId}")
+  public ResponseEntity<MenuItem> updateMenuItem(@PathVariable Long userId, @PathVariable Long menuItemId, @Valid @RequestBody MenuItem menuItem) {
+    return new ResponseEntity<>(menuItemService.updateMenuItem(userId, menuItemId, menuItem), HttpStatus.OK);
   }
 
   @DeleteMapping("/{id}")

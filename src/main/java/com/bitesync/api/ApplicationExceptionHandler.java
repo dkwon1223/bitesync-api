@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.bitesync.api.exception.EntityNotFoundException;
 import com.bitesync.api.exception.ErrorResponse;
+import com.bitesync.api.exception.InventoryItemNotFoundException;
+import com.bitesync.api.exception.MenuItemNotFoundException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -24,7 +26,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(EntityNotFoundException.class)
+  @ExceptionHandler({EntityNotFoundException.class, MenuItemNotFoundException.class, InventoryItemNotFoundException.class})
   public ResponseEntity<Object> handleResourceNotFoundException(RuntimeException ex) {
     ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
     return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
