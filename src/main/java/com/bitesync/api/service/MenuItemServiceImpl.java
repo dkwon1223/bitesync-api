@@ -47,6 +47,11 @@ public class MenuItemServiceImpl implements MenuItemService {
       .orElseThrow(() -> new EntityNotFoundException(id, MenuItem.class));
   }
 
+  @Override
+  public void deleteMenuItem(Long id) {
+    menuItemRepository.deleteById(id);
+  }
+
   static MenuItem unwrapMenuItem(Optional<MenuItem> entity, Long id) {
     if (entity.isPresent()) {
       return entity.get();

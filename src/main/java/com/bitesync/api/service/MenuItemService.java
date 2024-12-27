@@ -9,4 +9,5 @@ public interface MenuItemService {
   List<MenuItem> findAllMenuItems();
   MenuItem findMenuItemById(Long id);
   MenuItem updateMenuItem(Long id, MenuItem menuItem);
+  void deleteMenuItem(Long id);
 }
