@@ -34,6 +34,11 @@ public class MenuItemController {
     return new ResponseEntity<>(menuItemService.findMenuItemByUserIdAndMenuItemId(userId, menuItemId), HttpStatus.OK);
   }
 
+  @GetMapping("/user/{userId}")
+  public ResponseEntity<List<MenuItem>> getMenuItemByUserId(@PathVariable Long userId) {
+    return new ResponseEntity<>(menuItemService.findMenuItemsByUserId(userId), HttpStatus.OK);
+  }
+
   @PostMapping("/user/{userId}")
   public ResponseEntity<MenuItem> createMenuItem(@Valid @RequestBody MenuItem menuItem, @PathVariable Long userId) {
     return new ResponseEntity<>(menuItemService.saveMenuItem(userId, menuItem), HttpStatus.CREATED);
@@ -44,9 +49,9 @@ public class MenuItemController {
     return new ResponseEntity<>(menuItemService.updateMenuItem(userId, menuItemId, menuItem), HttpStatus.OK);
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<MenuItem> deleteMenuItem(@PathVariable Long id) {
-    menuItemService.deleteMenuItem(id);
+  @DeleteMapping("/user/{userId}/item/{menuItemId}")
+  public ResponseEntity<MenuItem> deleteMenuItem(@PathVariable Long userId, @PathVariable Long menuItemId) {
+    menuItemService.deleteMenuItem(userId, menuItemId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }

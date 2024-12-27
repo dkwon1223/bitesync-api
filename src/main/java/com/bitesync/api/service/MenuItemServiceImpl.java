@@ -2,14 +2,12 @@ package com.bitesync.api.service;
 
 import com.bitesync.api.entity.MenuItem;
 import com.bitesync.api.entity.User;
-import com.bitesync.api.exception.EntityNotFoundException;
 import com.bitesync.api.exception.MenuItemNotFoundException;
 import com.bitesync.api.repository.MenuItemRepository;
 import com.bitesync.api.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +30,13 @@ public class MenuItemServiceImpl implements MenuItemService {
     User targetUser = userServiceImpl.unwrapUser(user, userId);
     Optional<MenuItem> menuItem = menuItemRepository.findMenuItemByUserIdAndId(menuItemId, targetUser.getId());
     return unwrapMenuItem(menuItem, userId, menuItemId);
+  }
+
+  @Override
+  public List<MenuItem> findMenuItemsByUserId(Long userId) {
+    Optional<User> user = userRepository.findById(userId);
+    User targetUser = userServiceImpl.unwrapUser(user, userId);
+    return targetUser.getMenuItems();
   }
 
   @Override
@@ -58,8 +63,8 @@ public class MenuItemServiceImpl implements MenuItemService {
   }
 
   @Override
-  public void deleteMenuItem(Long id) {
-    menuItemRepository.deleteById(id);
+  public void deleteMenuItem(Long userId, Long menuItemId) {
+    menuItemRepository.deleteMenuItemByUserIdAndId(userId, menuItemId);
   }
 
   static MenuItem unwrapMenuItem(Optional<MenuItem> entity, Long userId, Long menuItemId) {
