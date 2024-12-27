@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/inventory")
@@ -22,6 +24,11 @@ public class InventoryItemController {
   @GetMapping("{id}")
   public ResponseEntity<InventoryItem> getInventoryItem(@PathVariable Long id) {
     return new ResponseEntity<>(inventoryItemService.getInventoryItemById(id), HttpStatus.OK);
+  }
+
+  @GetMapping("/all")
+  public ResponseEntity<List<InventoryItem>> getAllInventoryItems() {
+    return new ResponseEntity<>(inventoryItemService.getAllInventoryItems(), HttpStatus.OK);
   }
 
   @PostMapping
