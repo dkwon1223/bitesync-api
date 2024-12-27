@@ -5,6 +5,7 @@ import com.bitesync.api.service.InventoryItemService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ public class InventoryItemController {
 
   private InventoryItemService inventoryItemService;
 
-  @GetMapping("{id}")
+  @GetMapping("/{id}")
   public ResponseEntity<InventoryItem> getInventoryItem(@PathVariable Long id) {
     return new ResponseEntity<>(inventoryItemService.getInventoryItemById(id), HttpStatus.OK);
   }
@@ -32,13 +33,20 @@ public class InventoryItemController {
     return new ResponseEntity<>(inventoryItemService.getAllInventoryItems(), HttpStatus.OK);
   }
 
-  @PutMapping("{id}")
-  public ResponseEntity<InventoryItem> updateInventoryItem(@PathVariable Long id, @RequestBody InventoryItem inventoryItem) {
-    return new ResponseEntity<>(inventoryItemService.updateInventoryItem(id, inventoryItem), HttpStatus.OK);
-  }
-
   @PostMapping
   public ResponseEntity<InventoryItem> createInventoryItem(@RequestBody InventoryItem inventoryItem) {
     return new ResponseEntity<>(inventoryItemService.saveInventoryItem(inventoryItem), HttpStatus.CREATED);
   }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<InventoryItem> updateInventoryItem(@PathVariable Long id, @RequestBody InventoryItem inventoryItem) {
+    return new ResponseEntity<>(inventoryItemService.updateInventoryItem(id, inventoryItem), HttpStatus.OK);
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<InventoryItem> deleteInventoryItem(@PathVariable Long id) {
+    inventoryItemService.deleteInventoryItem(id);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
 }

@@ -46,6 +46,11 @@ public class InventoryItemServiceImpl implements InventoryItemService {
         .orElseThrow(() -> new EntityNotFoundException(id, InventoryItem.class));
   }
 
+  @Override
+  public void deleteInventoryItem(Long id) {
+    inventoryItemRepository.deleteById(id);
+  }
+
   static InventoryItem unwrapInventoryItem(Optional<InventoryItem> entity, Long id) {
     if(entity.isPresent()) {
       return entity.get();
