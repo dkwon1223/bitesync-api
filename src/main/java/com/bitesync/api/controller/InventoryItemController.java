@@ -34,9 +34,9 @@ public class InventoryItemController {
     return new ResponseEntity<>(inventoryItemService.getAllInventoryItems(), HttpStatus.OK);
   }
 
-  @PostMapping
-  public ResponseEntity<InventoryItem> createInventoryItem(@Valid @RequestBody InventoryItem inventoryItem) {
-    return new ResponseEntity<>(inventoryItemService.saveInventoryItem(inventoryItem), HttpStatus.CREATED);
+  @PostMapping("/user/{userId}")
+  public ResponseEntity<InventoryItem> createInventoryItem(@Valid @RequestBody InventoryItem inventoryItem, @PathVariable Long userId) {
+    return new ResponseEntity<>(inventoryItemService.saveInventoryItem(userId, inventoryItem), HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")

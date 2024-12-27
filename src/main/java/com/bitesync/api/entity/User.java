@@ -1,8 +1,11 @@
 package com.bitesync.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @NoArgsConstructor
@@ -27,4 +30,7 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<InventoryItem> inventoryItems;
 }
