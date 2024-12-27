@@ -30,6 +30,12 @@ public class InventoryItemServiceImpl implements InventoryItemService {
   }
 
   @Override
+  public List<InventoryItem> getUserInventoryItems(Long userId) {
+    User user = userRepository.findById(userId).get();
+    return user.getInventoryItems();
+  }
+
+  @Override
   public InventoryItem saveInventoryItem(Long userId, InventoryItem inventoryItem) {
     User user = userRepository.findById(userId).get();
     inventoryItem.setUser(user);

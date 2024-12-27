@@ -24,15 +24,21 @@ public class InventoryItemController {
 
   private InventoryItemService inventoryItemService;
 
+  @GetMapping("/all")
+  public ResponseEntity<List<InventoryItem>> getAllInventoryItems() {
+    return new ResponseEntity<>(inventoryItemService.getAllInventoryItems(), HttpStatus.OK);
+  }
+
   @GetMapping("/user/{userId}/item/{inventoryItemId}")
   public ResponseEntity<InventoryItem> getInventoryItem(@PathVariable Long userId, @PathVariable Long inventoryItemId) {
     return new ResponseEntity<>(inventoryItemService.getInventoryItemById(userId, inventoryItemId), HttpStatus.OK);
   }
 
-  @GetMapping("/all")
-  public ResponseEntity<List<InventoryItem>> getAllInventoryItems() {
-    return new ResponseEntity<>(inventoryItemService.getAllInventoryItems(), HttpStatus.OK);
+  @GetMapping("/user/{userId}")
+  public ResponseEntity<List<InventoryItem>> getUserInventoryItems(@PathVariable Long userId) {
+    return new ResponseEntity<>(inventoryItemService.getUserInventoryItems(userId), HttpStatus.OK);
   }
+
 
   @PostMapping("/user/{userId}")
   public ResponseEntity<InventoryItem> createInventoryItem(@Valid @RequestBody InventoryItem inventoryItem, @PathVariable Long userId) {

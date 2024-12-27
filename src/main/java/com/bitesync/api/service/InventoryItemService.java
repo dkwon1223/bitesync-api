@@ -8,6 +8,7 @@ public interface InventoryItemService {
   InventoryItem saveInventoryItem(Long userId, InventoryItem inventoryItem);
   InventoryItem getInventoryItemById(Long userId, Long inventoryItemId);
   List<InventoryItem> getAllInventoryItems();
+  List<InventoryItem> getUserInventoryItems(Long userId);
   InventoryItem updateInventoryItem(Long id, InventoryItem inventoryItem);
   void deleteInventoryItem(Long id);
 }
