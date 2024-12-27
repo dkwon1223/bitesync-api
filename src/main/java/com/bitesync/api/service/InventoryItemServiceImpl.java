@@ -44,8 +44,8 @@ public class InventoryItemServiceImpl implements InventoryItemService {
   }
 
   @Override
-  public InventoryItem updateInventoryItem(Long id, InventoryItem inventoryItem) {
-    return inventoryItemRepository.findById(id)
+  public InventoryItem updateInventoryItem(Long inventoryItemId, Long userId, InventoryItem inventoryItem) {
+    return inventoryItemRepository.findByUserIdAndId(inventoryItemId, userId)
         .map(existingItem -> {
           existingItem.setName(inventoryItem.getName());
           existingItem.setImageUrl(inventoryItem.getImageUrl());
