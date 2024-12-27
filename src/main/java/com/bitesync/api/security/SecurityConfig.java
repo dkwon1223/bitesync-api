@@ -1,6 +1,8 @@
 package com.bitesync.api.security;
 
 import com.bitesync.api.security.filter.AuthenticationFilter;
+import com.bitesync.api.security.filter.ExceptionHandlerFilter;
+import com.bitesync.api.security.filter.JWTAuthorizationFilter;
 import com.bitesync.api.security.manager.CustomAuthenticationManager;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 @Configuration
 @AllArgsConstructor
@@ -29,7 +32,10 @@ public class SecurityConfig {
                         .requestMatchers("/user/signup").permitAll()
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
+                .addFilter(authenticationFilter)
+                .addFilterAfter(new JWTAuthorizationFilter(), AuthenticationFilter.class);
         return http.build();
     }
 }
