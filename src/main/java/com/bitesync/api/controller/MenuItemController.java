@@ -2,6 +2,7 @@ package com.bitesync.api.controller;
 
 import com.bitesync.api.entity.MenuItem;
 import com.bitesync.api.service.MenuItemService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +35,12 @@ public class MenuItemController {
   }
 
   @PostMapping
-  public ResponseEntity<MenuItem> createMenuItem(@RequestBody MenuItem menuItem) {
+  public ResponseEntity<MenuItem> createMenuItem(@Valid @RequestBody MenuItem menuItem) {
     return new ResponseEntity<>(menuItemService.saveMenuItem(menuItem), HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<MenuItem> updateMenuItem(@PathVariable Long id, @RequestBody MenuItem menuItem) {
+  public ResponseEntity<MenuItem> updateMenuItem(@Valid @PathVariable Long id, @RequestBody MenuItem menuItem) {
     return new ResponseEntity<>(menuItemService.updateMenuItem(id, menuItem), HttpStatus.OK);
   }
 

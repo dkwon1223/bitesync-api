@@ -2,6 +2,7 @@ package com.bitesync.api.controller;
 
 import com.bitesync.api.entity.User;
 import com.bitesync.api.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestBody User user) {
+    public ResponseEntity<User> signup(@Valid @RequestBody User user) {
         userService.signupUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
