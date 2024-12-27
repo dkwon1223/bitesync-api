@@ -22,7 +22,9 @@ public class InventoryItemServiceImpl implements InventoryItemService {
 
   @Override
   public InventoryItem getInventoryItemById(Long userId, Long inventoryItemId) throws EntityNotFoundException {
-    Optional<InventoryItem> inventoryItem = inventoryItemRepository.findByUserIdAndId(userId, inventoryItemId);
+    Optional<User> user = userRepository.findById(userId);
+    User targetUser = userServiceImpl.unwrapUser(user, userId);
+    Optional<InventoryItem> inventoryItem = inventoryItemRepository.findByUserIdAndId(targetUser.getId(), inventoryItemId);
     return unwrapInventoryItem(inventoryItem, userId, inventoryItemId);
   }
 
@@ -33,8 +35,8 @@ public class InventoryItemServiceImpl implements InventoryItemService {
 
   @Override
   public List<InventoryItem> getUserInventoryItems(Long userId) {
-    User user = userRepository.findById(userId).get();
-    return user.getInventoryItems();
+    Optional<User> user = userRepository.findById(userId);
+    return userServiceImpl.unwrapUser(user, userId).getInventoryItems();
   }
 
   @Override
