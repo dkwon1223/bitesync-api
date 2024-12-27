@@ -31,6 +31,17 @@ public class OrderItemServiceImpl implements OrderItemService {
     return orderItemRepository.save(orderItem);
   }
 
+  @Override
+  public OrderItem updateOrderItem(Long id, OrderItem orderItem) {
+    return orderItemRepository.findById(id)
+        .map(existingOrderItem -> {
+          existingOrderItem.setQuantity(orderItem.getQuantity());
+          existingOrderItem.setSubtotal(orderItem.getSubtotal());
+          return orderItemRepository.save(existingOrderItem);
+        })
+        .orElseThrow(() -> new EntityNotFoundException(id, OrderItem.class));
+  }
+
   static OrderItem unwrapOrderItem(Optional<OrderItem> entity, Long id) {
     if(entity.isPresent()) {
       return entity.get();

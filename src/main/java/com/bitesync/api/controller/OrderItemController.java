@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,5 +35,10 @@ public class OrderItemController {
   @PostMapping
   public ResponseEntity<OrderItem> createOrderItem(@RequestBody OrderItem orderItem) {
     return new ResponseEntity<>(orderItemService.save(orderItem), HttpStatus.CREATED);
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<OrderItem> updateOrderItem(@PathVariable Long id, @RequestBody OrderItem orderItem) {
+    return new ResponseEntity<>(orderItemService.updateOrderItem(id, orderItem), HttpStatus.OK);
   }
 }
