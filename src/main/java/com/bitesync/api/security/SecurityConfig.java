@@ -1,6 +1,7 @@
 package com.bitesync.api.security;
 
 import com.bitesync.api.security.filter.AuthenticationFilter;
+import com.bitesync.api.security.filter.ExceptionHandlerFilter;
 import com.bitesync.api.security.manager.CustomAuthenticationManager;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +30,9 @@ public class SecurityConfig {
                         .requestMatchers("/user/signup").permitAll()
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
+                .addFilter(authenticationFilter);
         return http.build();
     }
 }
