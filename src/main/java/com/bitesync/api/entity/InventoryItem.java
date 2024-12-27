@@ -1,5 +1,6 @@
 package com.bitesync.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +16,8 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -37,8 +40,10 @@ public class InventoryItem {
   @Column(name = "name")
   private String name;
 
-  @Column(name = "img_url")
-  private String imgUrl;
+  @NonNull
+  @NotBlank(message = "image url cannot be blank")
+  @Column(name = "image_url")
+  private String imageUrl;
 
   @NonNull
   @NotNull(message = "quantity cannot be null")
@@ -57,6 +62,9 @@ public class InventoryItem {
   @Column(name = "category")
   private String category;
 
+  @UpdateTimestamp
   @Column(name = "updated_at")
+  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime updatedAt;
 }
