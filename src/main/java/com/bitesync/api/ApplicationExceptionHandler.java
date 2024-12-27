@@ -56,7 +56,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
             .orElse("");
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(String.format("Invalid value '%s'. Allowed values are: %s",
+            .body(String.format("Invalid status '%s'. Allowed values are: %s",
                                 invalidFormatException.getValue(), allowedValues));
       }
     }

@@ -44,6 +44,11 @@ public class OrderServiceImpl implements OrderService {
         .orElseThrow(() -> new EntityNotFoundException(id, Order.class));
   }
 
+  @Override
+  public void deleteOrder(Long id) {
+    orderRepository.deleteById(id);
+  }
+
   static Order unwrapOrder(Optional<Order> entity, Long id) {
     if(entity.isPresent()) {
       return entity.get();
