@@ -2,6 +2,7 @@ package com.bitesync.api.controller;
 
 import com.bitesync.api.entity.InventoryItem;
 import com.bitesync.api.service.InventoryItemService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +35,12 @@ public class InventoryItemController {
   }
 
   @PostMapping
-  public ResponseEntity<InventoryItem> createInventoryItem(@RequestBody InventoryItem inventoryItem) {
+  public ResponseEntity<InventoryItem> createInventoryItem(@Valid @RequestBody InventoryItem inventoryItem) {
     return new ResponseEntity<>(inventoryItemService.saveInventoryItem(inventoryItem), HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<InventoryItem> updateInventoryItem(@PathVariable Long id, @RequestBody InventoryItem inventoryItem) {
+  public ResponseEntity<InventoryItem> updateInventoryItem(@Valid @PathVariable Long id, @RequestBody InventoryItem inventoryItem) {
     return new ResponseEntity<>(inventoryItemService.updateInventoryItem(id, inventoryItem), HttpStatus.OK);
   }
 
