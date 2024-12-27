@@ -45,7 +45,7 @@ public class InventoryItemController {
   }
 
   @PutMapping("/user/{userId}/item/{itemId}")
-  public ResponseEntity<InventoryItem> updateInventoryItem(@PathVariable Long itemId, @PathVariable Long userId, @Valid @RequestBody InventoryItem inventoryItem) {
+  public ResponseEntity<InventoryItem> updateInventoryItem(@PathVariable Long userId, @PathVariable Long itemId, @Valid @RequestBody InventoryItem inventoryItem) {
     return new ResponseEntity<>(inventoryItemService.updateInventoryItem(itemId, userId, inventoryItem), HttpStatus.OK);
   }
 

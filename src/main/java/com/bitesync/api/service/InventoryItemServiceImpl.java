@@ -18,6 +18,7 @@ public class InventoryItemServiceImpl implements InventoryItemService {
 
   private InventoryItemRepository inventoryItemRepository;
   private UserRepository userRepository;
+  private UserServiceImpl userServiceImpl;
 
   @Override
   public InventoryItem getInventoryItemById(Long userId, Long inventoryItemId) throws EntityNotFoundException {
@@ -38,8 +39,8 @@ public class InventoryItemServiceImpl implements InventoryItemService {
 
   @Override
   public InventoryItem saveInventoryItem(Long userId, InventoryItem inventoryItem) {
-    User user = userRepository.findById(userId).get();
-    inventoryItem.setUser(user);
+    Optional<User> user = userRepository.findById(userId);
+    inventoryItem.setUser(userServiceImpl.unwrapUser(user, userId));
     return inventoryItemRepository.save(inventoryItem);
   }
 
@@ -55,7 +56,7 @@ public class InventoryItemServiceImpl implements InventoryItemService {
           existingItem.setUpdatedAt(inventoryItem.getUpdatedAt());
           return inventoryItemRepository.save(existingItem);
         })
-        .orElseThrow(() -> new EntityNotFoundException(id, InventoryItem.class));
+        .orElseThrow(() -> new InventoryItemNotFoundException(inventoryItemId, userId));
   }
 
   @Override

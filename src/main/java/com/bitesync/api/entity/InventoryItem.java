@@ -1,6 +1,7 @@
 package com.bitesync.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -73,6 +74,7 @@ public class InventoryItem {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime updatedAt;
 
+  @JsonIgnore
   @ManyToOne(optional = false)
   @JoinColumn(referencedColumnName = "id", name = "user_id")
   private User user;
