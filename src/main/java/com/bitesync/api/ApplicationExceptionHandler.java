@@ -6,24 +6,25 @@ import java.util.List;
 
 import com.bitesync.api.exception.EntityNotFoundException;
 import com.bitesync.api.exception.ErrorResponse;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 
 @ControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler({EntityNotFoundException.class})
+  @ExceptionHandler(EntityNotFoundException.class)
   public ResponseEntity<Object> handleResourceNotFoundException(RuntimeException ex) {
     ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
     return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
@@ -41,10 +42,26 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-  public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-    ErrorResponse error = new ErrorResponse(Arrays.asList("Invalid value for field " + ex.getName()));
-    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+  @Override
+  protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    Throwable cause = ex.getCause();
+    if (cause instanceof InvalidFormatException invalidFormatException) {
+      if (invalidFormatException.getTargetType().isEnum()) {
+        Class<?> enumClass = invalidFormatException.getTargetType();
+        Object[] enumConstants = enumClass.getEnumConstants();
+
+        String allowedValues = Arrays.stream(enumConstants)
+            .map(enumConstant -> enumConstant.toString())
+            .reduce((e1, e2) -> e1 + ", " + e2)
+            .orElse("");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(String.format("Invalid value '%s'. Allowed values are: %s",
+                                invalidFormatException.getValue(), allowedValues));
+      }
+    }
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body("Invalid request body: " + ex.getLocalizedMessage());
   }
 
   @Override

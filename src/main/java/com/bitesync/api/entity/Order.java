@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -51,9 +52,15 @@ public class Order {
   @Column(name = "total")
   private BigDecimal total;
 
+  @CreationTimestamp
+  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @Column(nullable = false, updatable = false, name = "created_at")
+  private LocalDateTime orderDate;
+
   @UpdateTimestamp
   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-  @Column(name = "order_date")
-  private LocalDateTime orderDate;
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 }

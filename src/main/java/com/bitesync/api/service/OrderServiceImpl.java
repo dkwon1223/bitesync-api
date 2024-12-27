@@ -31,6 +31,19 @@ public class OrderServiceImpl implements OrderService {
     return orderRepository.save(order);
   }
 
+  @Override
+  public Order updateOrder(Long id, Order order) {
+    return orderRepository.findById(id)
+        .map(existingOrder -> {
+          existingOrder.setCustomerName(order.getCustomerName());
+          existingOrder.setStatus(order.getStatus());
+          existingOrder.setTotal(order.getTotal());
+          existingOrder.setUpdatedAt(order.getUpdatedAt());
+          return orderRepository.save(existingOrder);
+        })
+        .orElseThrow(() -> new EntityNotFoundException(id, Order.class));
+  }
+
   static Order unwrapOrder(Optional<Order> entity, Long id) {
     if(entity.isPresent()) {
       return entity.get();
