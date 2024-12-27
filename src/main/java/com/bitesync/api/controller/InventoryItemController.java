@@ -40,7 +40,7 @@ public class InventoryItemController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<InventoryItem> updateInventoryItem(@Valid @PathVariable Long id, @RequestBody InventoryItem inventoryItem) {
+  public ResponseEntity<InventoryItem> updateInventoryItem(@PathVariable Long id, @Valid @RequestBody InventoryItem inventoryItem) {
     return new ResponseEntity<>(inventoryItemService.updateInventoryItem(id, inventoryItem), HttpStatus.OK);
   }
 

@@ -40,7 +40,7 @@ public class OrderController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Order> updateOrder(@Valid @PathVariable("id") Long id, @RequestBody Order order) {
+  public ResponseEntity<Order> updateOrder(@PathVariable("id") Long id, @Valid @RequestBody Order order) {
     return new ResponseEntity<>(orderService.updateOrder(id, order), HttpStatus.OK);
   }
 

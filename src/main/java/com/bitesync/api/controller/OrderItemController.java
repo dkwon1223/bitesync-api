@@ -2,6 +2,7 @@ package com.bitesync.api.controller;
 
 import com.bitesync.api.entity.OrderItem;
 import com.bitesync.api.service.OrderItemService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +35,12 @@ public class OrderItemController {
   }
 
   @PostMapping
-  public ResponseEntity<OrderItem> createOrderItem(@RequestBody OrderItem orderItem) {
+  public ResponseEntity<OrderItem> createOrderItem(@Valid @RequestBody OrderItem orderItem) {
     return new ResponseEntity<>(orderItemService.save(orderItem), HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<OrderItem> updateOrderItem(@PathVariable Long id, @RequestBody OrderItem orderItem) {
+  public ResponseEntity<OrderItem> updateOrderItem(@PathVariable Long id, @Valid @RequestBody OrderItem orderItem) {
     return new ResponseEntity<>(orderItemService.updateOrderItem(id, orderItem), HttpStatus.OK);
   }
 

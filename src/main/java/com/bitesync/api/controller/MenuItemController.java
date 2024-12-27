@@ -40,7 +40,7 @@ public class MenuItemController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<MenuItem> updateMenuItem(@Valid @PathVariable Long id, @RequestBody MenuItem menuItem) {
+  public ResponseEntity<MenuItem> updateMenuItem(@PathVariable Long id, @Valid @RequestBody MenuItem menuItem) {
     return new ResponseEntity<>(menuItemService.updateMenuItem(id, menuItem), HttpStatus.OK);
   }
 
