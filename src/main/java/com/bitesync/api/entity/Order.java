@@ -41,7 +41,7 @@ public class Order {
   private String customerName;
 
   @NonNull
-  @NotBlank(message = "order status cannot be blank")
+  @NotNull(message = "order status cannot be null")
   @Enumerated(EnumType.STRING)
   @Column(name = "status")
   private OrderStatus status;
