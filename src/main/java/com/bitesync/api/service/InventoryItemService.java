@@ -8,4 +8,5 @@ public interface InventoryItemService {
   InventoryItem saveInventoryItem(InventoryItem inventoryItem);
   InventoryItem getInventoryItemById(Long id);
   List<InventoryItem> getAllInventoryItems();
+  InventoryItem updateInventoryItem(Long id, InventoryItem inventoryItem);
 }

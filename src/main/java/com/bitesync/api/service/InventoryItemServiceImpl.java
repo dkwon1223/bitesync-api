@@ -31,6 +31,21 @@ public class InventoryItemServiceImpl implements InventoryItemService {
     return (List<InventoryItem>) inventoryItemRepository.findAll();
   }
 
+  @Override
+  public InventoryItem updateInventoryItem(Long id, InventoryItem inventoryItem) {
+    return inventoryItemRepository.findById(id)
+        .map(existingItem -> {
+          existingItem.setName(inventoryItem.getName());
+          existingItem.setImageUrl(inventoryItem.getImageUrl());
+          existingItem.setQuantity(inventoryItem.getQuantity());
+          existingItem.setUnitPrice(inventoryItem.getUnitPrice());
+          existingItem.setCategory(inventoryItem.getCategory());
+          existingItem.setUpdatedAt(inventoryItem.getUpdatedAt());
+          return inventoryItemRepository.save(existingItem);
+        })
+        .orElseThrow(() -> new EntityNotFoundException(id, InventoryItem.class));
+  }
+
   static InventoryItem unwrapInventoryItem(Optional<InventoryItem> entity, Long id) {
     if(entity.isPresent()) {
       return entity.get();
