@@ -39,7 +39,6 @@ public class InventoryItemController {
     return new ResponseEntity<>(inventoryItemService.getUserInventoryItems(userId), HttpStatus.OK);
   }
 
-
   @PostMapping("/user/{userId}")
   public ResponseEntity<InventoryItem> createInventoryItem(@Valid @RequestBody InventoryItem inventoryItem, @PathVariable Long userId) {
     return new ResponseEntity<>(inventoryItemService.saveInventoryItem(userId, inventoryItem), HttpStatus.CREATED);
@@ -50,9 +49,9 @@ public class InventoryItemController {
     return new ResponseEntity<>(inventoryItemService.updateInventoryItem(id, inventoryItem), HttpStatus.OK);
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<InventoryItem> deleteInventoryItem(@PathVariable Long id) {
-    inventoryItemService.deleteInventoryItem(id);
+  @DeleteMapping("/user/{userId}/item/{inventoryItemId}")
+  public ResponseEntity<InventoryItem> deleteInventoryItem(@PathVariable Long userId, @PathVariable Long inventoryItemId) {
+    inventoryItemService.deleteInventoryItem(userId, inventoryItemId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

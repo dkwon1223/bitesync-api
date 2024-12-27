@@ -10,5 +10,5 @@ public interface InventoryItemService {
   List<InventoryItem> getAllInventoryItems();
   List<InventoryItem> getUserInventoryItems(Long userId);
   InventoryItem updateInventoryItem(Long id, InventoryItem inventoryItem);
-  void deleteInventoryItem(Long id);
+  void deleteInventoryItem(Long userId, Long inventoryItemId);
 }

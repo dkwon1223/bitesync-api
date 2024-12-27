@@ -3,6 +3,7 @@ package com.bitesync.api.service;
 import com.bitesync.api.entity.InventoryItem;
 import com.bitesync.api.entity.User;
 import com.bitesync.api.exception.EntityNotFoundException;
+import com.bitesync.api.exception.InventoryItemNotFoundException;
 import com.bitesync.api.repository.InventoryItemRepository;
 import com.bitesync.api.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -58,15 +59,15 @@ public class InventoryItemServiceImpl implements InventoryItemService {
   }
 
   @Override
-  public void deleteInventoryItem(Long id) {
-    inventoryItemRepository.deleteById(id);
+  public void deleteInventoryItem(Long userId, Long inventoryItemId) {
+    inventoryItemRepository.deleteInventoryItemByUserIdAndId(userId, inventoryItemId);
   }
 
   static InventoryItem unwrapInventoryItem(Optional<InventoryItem> entity, Long userId, Long inventoryItemId) {
     if(entity.isPresent()) {
       return entity.get();
     } else {
-      throw new EntityNotFoundException(inventoryItemId, InventoryItem.class);
+      throw new InventoryItemNotFoundException(inventoryItemId, userId);
     }
   }
 }
