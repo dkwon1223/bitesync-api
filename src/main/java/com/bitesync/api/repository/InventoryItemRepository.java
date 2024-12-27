@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface InventoryItemRepository extends CrudRepository<InventoryItem, Long> {
-  Optional<InventoryItem> findById(Long id);
+  Optional<InventoryItem> findByUserIdAndId(Long userId, Long id);
 }

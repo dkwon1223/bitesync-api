@@ -31,7 +31,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "inventory_item", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"id", "user_id"})
+    @UniqueConstraint(columnNames = {"name", "user_id"})
 })
 public class InventoryItem {
 

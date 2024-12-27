@@ -19,9 +19,9 @@ public class InventoryItemServiceImpl implements InventoryItemService {
   private UserRepository userRepository;
 
   @Override
-  public InventoryItem getInventoryItemById(Long id) {
-    Optional<InventoryItem> inventoryItem = inventoryItemRepository.findById(id);
-    return unwrapInventoryItem(inventoryItem, id);
+  public InventoryItem getInventoryItemById(Long userId, Long inventoryItemId) throws EntityNotFoundException {
+    Optional<InventoryItem> inventoryItem = inventoryItemRepository.findByUserIdAndId(userId, inventoryItemId);
+    return unwrapInventoryItem(inventoryItem, userId, inventoryItemId);
   }
 
   @Override
@@ -56,11 +56,11 @@ public class InventoryItemServiceImpl implements InventoryItemService {
     inventoryItemRepository.deleteById(id);
   }
 
-  static InventoryItem unwrapInventoryItem(Optional<InventoryItem> entity, Long id) {
+  static InventoryItem unwrapInventoryItem(Optional<InventoryItem> entity, Long userId, Long inventoryItemId) {
     if(entity.isPresent()) {
       return entity.get();
     } else {
-      throw new EntityNotFoundException(id, InventoryItem.class);
+      throw new EntityNotFoundException(inventoryItemId, InventoryItem.class);
     }
   }
 }

@@ -24,9 +24,9 @@ public class InventoryItemController {
 
   private InventoryItemService inventoryItemService;
 
-  @GetMapping("/{id}")
-  public ResponseEntity<InventoryItem> getInventoryItem(@PathVariable Long id) {
-    return new ResponseEntity<>(inventoryItemService.getInventoryItemById(id), HttpStatus.OK);
+  @GetMapping("/user/{userId}/item/{inventoryItemId}")
+  public ResponseEntity<InventoryItem> getInventoryItem(@PathVariable Long userId, @PathVariable Long inventoryItemId) {
+    return new ResponseEntity<>(inventoryItemService.getInventoryItemById(userId, inventoryItemId), HttpStatus.OK);
   }
 
   @GetMapping("/all")
