@@ -24,29 +24,34 @@ public class InventoryItemController {
 
   private InventoryItemService inventoryItemService;
 
-  @GetMapping("/{id}")
-  public ResponseEntity<InventoryItem> getInventoryItem(@PathVariable Long id) {
-    return new ResponseEntity<>(inventoryItemService.getInventoryItemById(id), HttpStatus.OK);
-  }
-
   @GetMapping("/all")
   public ResponseEntity<List<InventoryItem>> getAllInventoryItems() {
     return new ResponseEntity<>(inventoryItemService.getAllInventoryItems(), HttpStatus.OK);
   }
 
-  @PostMapping
-  public ResponseEntity<InventoryItem> createInventoryItem(@Valid @RequestBody InventoryItem inventoryItem) {
-    return new ResponseEntity<>(inventoryItemService.saveInventoryItem(inventoryItem), HttpStatus.CREATED);
+  @GetMapping("/user/{userId}/item/{inventoryItemId}")
+  public ResponseEntity<InventoryItem> getInventoryItem(@PathVariable Long userId, @PathVariable Long inventoryItemId) {
+    return new ResponseEntity<>(inventoryItemService.getInventoryItemById(userId, inventoryItemId), HttpStatus.OK);
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<InventoryItem> updateInventoryItem(@Valid @PathVariable Long id, @RequestBody InventoryItem inventoryItem) {
-    return new ResponseEntity<>(inventoryItemService.updateInventoryItem(id, inventoryItem), HttpStatus.OK);
+  @GetMapping("/user/{userId}")
+  public ResponseEntity<List<InventoryItem>> getUserInventoryItems(@PathVariable Long userId) {
+    return new ResponseEntity<>(inventoryItemService.getUserInventoryItems(userId), HttpStatus.OK);
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<InventoryItem> deleteInventoryItem(@PathVariable Long id) {
-    inventoryItemService.deleteInventoryItem(id);
+  @PostMapping("/user/{userId}")
+  public ResponseEntity<InventoryItem> createInventoryItem(@Valid @RequestBody InventoryItem inventoryItem, @PathVariable Long userId) {
+    return new ResponseEntity<>(inventoryItemService.saveInventoryItem(userId, inventoryItem), HttpStatus.CREATED);
+  }
+
+  @PutMapping("/user/{userId}/item/{itemId}")
+  public ResponseEntity<InventoryItem> updateInventoryItem(@PathVariable Long userId, @PathVariable Long itemId, @Valid @RequestBody InventoryItem inventoryItem) {
+    return new ResponseEntity<>(inventoryItemService.updateInventoryItem(itemId, userId, inventoryItem), HttpStatus.OK);
+  }
+
+  @DeleteMapping("/user/{userId}/item/{inventoryItemId}")
+  public ResponseEntity<InventoryItem> deleteInventoryItem(@PathVariable Long userId, @PathVariable Long inventoryItemId) {
+    inventoryItemService.deleteInventoryItem(userId, inventoryItemId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

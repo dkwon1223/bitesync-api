@@ -1,12 +1,13 @@
 package com.bitesync.api.service;
 
 import com.bitesync.api.entity.MenuItem;
-import com.bitesync.api.exception.EntityNotFoundException;
+import com.bitesync.api.entity.User;
+import com.bitesync.api.exception.MenuItemNotFoundException;
 import com.bitesync.api.repository.MenuItemRepository;
+import com.bitesync.api.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +16,8 @@ import java.util.Optional;
 public class MenuItemServiceImpl implements MenuItemService {
 
   private MenuItemRepository menuItemRepository;
+  private UserRepository userRepository;
+  private UserServiceImpl userServiceImpl;
 
   @Override
   public List<MenuItem> findAllMenuItems() {
@@ -22,19 +25,31 @@ public class MenuItemServiceImpl implements MenuItemService {
   }
 
   @Override
-  public MenuItem findMenuItemById(Long id) {
-    Optional<MenuItem> menuItem = menuItemRepository.findById(id);
-    return unwrapMenuItem(menuItem, id);
+  public MenuItem findMenuItemByUserIdAndMenuItemId(Long userId, Long menuItemId) throws MenuItemNotFoundException {
+    Optional<User> user = userRepository.findById(userId);
+    User targetUser = userServiceImpl.unwrapUser(user, userId);
+    Optional<MenuItem> menuItem = menuItemRepository.findMenuItemByUserIdAndId(menuItemId, targetUser.getId());
+    return unwrapMenuItem(menuItem, userId, menuItemId);
   }
 
   @Override
-  public MenuItem saveMenuItem(MenuItem menuItem) {
+  public List<MenuItem> findMenuItemsByUserId(Long userId) {
+    Optional<User> user = userRepository.findById(userId);
+    User targetUser = userServiceImpl.unwrapUser(user, userId);
+    return targetUser.getMenuItems();
+  }
+
+  @Override
+  public MenuItem saveMenuItem(Long userId, MenuItem menuItem) {
+    Optional<User> user = userRepository.findById(userId);
+    User targetUser = userServiceImpl.unwrapUser(user, userId);
+    menuItem.setUser(targetUser);
     return menuItemRepository.save(menuItem);
   }
 
   @Override
-  public MenuItem updateMenuItem(Long id, MenuItem menuItem) {
-    return menuItemRepository.findById(id)
+  public MenuItem updateMenuItem(Long userId, Long menuItemId, MenuItem menuItem) {
+    return menuItemRepository.findMenuItemByUserIdAndId(userId, menuItemId)
       .map(existingItem -> {
         existingItem.setName(menuItem.getName());
         existingItem.setImageUrl(menuItem.getImageUrl());
@@ -44,19 +59,19 @@ public class MenuItemServiceImpl implements MenuItemService {
         existingItem.setAvailable(menuItem.getAvailable());
         return menuItemRepository.save(existingItem);
       })
-      .orElseThrow(() -> new EntityNotFoundException(id, MenuItem.class));
+      .orElseThrow(() -> new MenuItemNotFoundException(userId, menuItemId));
   }
 
   @Override
-  public void deleteMenuItem(Long id) {
-    menuItemRepository.deleteById(id);
+  public void deleteMenuItem(Long userId, Long menuItemId) {
+    menuItemRepository.deleteMenuItemByUserIdAndId(userId, menuItemId);
   }
 
-  static MenuItem unwrapMenuItem(Optional<MenuItem> entity, Long id) {
+  static MenuItem unwrapMenuItem(Optional<MenuItem> entity, Long userId, Long menuItemId) {
     if (entity.isPresent()) {
       return entity.get();
     } else {
-      throw new EntityNotFoundException(id, MenuItem.class);
+      throw new MenuItemNotFoundException(userId, menuItemId);
     }
   }
 

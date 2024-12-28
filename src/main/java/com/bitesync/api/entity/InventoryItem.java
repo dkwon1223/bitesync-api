@@ -1,12 +1,16 @@
 package com.bitesync.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -27,7 +31,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "inventory_item")
+@Table(name = "inventory_item", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name", "user_id"})
+})
 public class InventoryItem {
 
   @Id
@@ -67,4 +73,9 @@ public class InventoryItem {
   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime updatedAt;
+
+  @JsonIgnore
+  @ManyToOne(optional = false)
+  @JoinColumn(referencedColumnName = "id", name = "user_id")
+  private User user;
 }
