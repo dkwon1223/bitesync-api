@@ -71,4 +71,8 @@ public class Order {
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
   private List<OrderItem> orderItems;
+
+  @ManyToOne(optional = false)
+  @JoinColumn(referencedColumnName = "id", name = "user_id")
+  private User user;
 }
