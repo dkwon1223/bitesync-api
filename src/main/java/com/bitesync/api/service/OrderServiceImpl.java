@@ -1,8 +1,10 @@
 package com.bitesync.api.service;
 
 import com.bitesync.api.entity.Order;
+import com.bitesync.api.entity.User;
 import com.bitesync.api.exception.EntityNotFoundException;
 import com.bitesync.api.repository.OrderRepository;
+import com.bitesync.api.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +16,17 @@ import java.util.Optional;
 public class OrderServiceImpl implements OrderService {
 
   private OrderRepository orderRepository;
+  private UserRepository userRepository;
 
   @Override
   public List<Order> getAllOrders() {
     return (List<Order>) orderRepository.findAll();
+  }
+
+  @Override
+  public List<Order> getOrdersByUserId(Long userId) {
+    User targetUser = UserServiceImpl.unwrapUser(userRepository.findById(userId), userId);
+    return orderRepository.findByUserId(targetUser.getId());
   }
 
   @Override
