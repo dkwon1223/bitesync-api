@@ -39,6 +39,6 @@ public class User {
     private List<MenuItem> menuItems;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Order> orders;
 }

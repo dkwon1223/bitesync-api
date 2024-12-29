@@ -36,7 +36,9 @@ public class OrderServiceImpl implements OrderService {
   }
 
   @Override
-  public Order createOrder(Order order) {
+  public Order createOrder(Long userId, Order order) {
+    User targetUser = UserServiceImpl.unwrapUser(userRepository.findById(userId), userId);
+    order.setUser(targetUser);
     return orderRepository.save(order);
   }
 

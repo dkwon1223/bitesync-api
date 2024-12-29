@@ -1,6 +1,7 @@
 package com.bitesync.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -72,6 +73,7 @@ public class Order {
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
   private List<OrderItem> orderItems;
 
+  @JsonIgnore
   @ManyToOne(optional = false)
   @JoinColumn(referencedColumnName = "id", name = "user_id")
   private User user;

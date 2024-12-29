@@ -39,9 +39,9 @@ public class OrderController {
     return new ResponseEntity<>(orderService.getOrderById(id), HttpStatus.OK);
   }
 
-  @PostMapping
-  public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) {
-    return new ResponseEntity<>(orderService.createOrder(order), HttpStatus.CREATED);
+  @PostMapping("/user/{userId}")
+  public ResponseEntity<Order> createOrder(@PathVariable Long userId, @Valid @RequestBody Order order) {
+    return new ResponseEntity<>(orderService.createOrder(userId, order), HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")
