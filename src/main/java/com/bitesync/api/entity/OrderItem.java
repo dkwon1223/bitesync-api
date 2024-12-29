@@ -1,5 +1,6 @@
 package com.bitesync.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -43,6 +44,7 @@ public class OrderItem {
   @Column(name = "subtotal")
   private BigDecimal subtotal;
 
+  @JsonIgnore
   @ManyToOne(optional = false)
   @JoinColumn(referencedColumnName = "id", name = "order_id")
   private Order order;

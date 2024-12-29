@@ -19,7 +19,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/order/item")
+@RequestMapping("/order-item")
 public class OrderItemController {
 
   private OrderItemService orderItemService;
@@ -34,9 +34,9 @@ public class OrderItemController {
     return new ResponseEntity<>(orderItemService.findOrderItemById(id), HttpStatus.OK);
   }
 
-  @PostMapping
-  public ResponseEntity<OrderItem> createOrderItem(@Valid @RequestBody OrderItem orderItem) {
-    return new ResponseEntity<>(orderItemService.save(orderItem), HttpStatus.CREATED);
+  @PostMapping("/order/{orderId}")
+  public ResponseEntity<OrderItem> createOrderItem(@PathVariable Long orderId, @Valid @RequestBody OrderItem orderItem) {
+    return new ResponseEntity<>(orderItemService.save(orderId, orderItem), HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")
