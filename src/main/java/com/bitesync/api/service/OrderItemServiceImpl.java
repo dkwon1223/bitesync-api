@@ -61,35 +61,15 @@ public class OrderItemServiceImpl implements OrderItemService {
       Order targetOrder = OrderServiceImpl.unwrapOrder(orderRepository.findById(orderId), orderId);
       orderItem.setOrder(targetOrder);
 
-      List<MenuInventory> menuInventoryItems = menuInventoryRepository.findByRequiredMenuItem(targetMenuItem);
-
-      for (MenuInventory menuInventory : menuInventoryItems) {
-        InventoryItem inventoryItem = menuInventory.getRequiredInventoryItem();
-        Integer quantityNeeded = (int) Math.ceil(menuInventory.getQuantityNeeded());
-        Integer totalQuantityConsumed = quantityNeeded * quantity;
-
-        if (inventoryItem.getQuantity() < totalQuantityConsumed) {
-          throw new InsufficientInventoryException(inventoryItem, totalQuantityConsumed);
-        }
-      }
-
-      for (MenuInventory menuInventory : menuInventoryItems) {
-        InventoryItem inventoryItem = menuInventory.getRequiredInventoryItem();
-        Integer quantityNeeded = (int) Math.ceil(menuInventory.getQuantityNeeded());
-        Integer totalQuantityConsumed = quantityNeeded * quantity;
-
-        inventoryItem.setQuantity(inventoryItem.getQuantity() - totalQuantityConsumed);
-        inventoryItemRepository.save(inventoryItem);
-      }
-
-      orderItemRepository.save(orderItem);
+      updateInventory(targetMenuItem, quantity);
 
       updateOrderTotal(targetOrder);
+
+      orderItemRepository.save(orderItem);
 
       return orderItem;
 
   }
-
 
 
   @Override
@@ -127,5 +107,28 @@ public class OrderItemServiceImpl implements OrderItemService {
     order.setTotal(total);
 
     orderRepository.save(order);
+  }
+
+  private void updateInventory(MenuItem targetMenuItem, Integer orderQuantity) {
+    List<MenuInventory> menuInventoryItems = menuInventoryRepository.findByRequiredMenuItem(targetMenuItem);
+
+    for (MenuInventory menuInventory : menuInventoryItems) {
+      InventoryItem inventoryItem = menuInventory.getRequiredInventoryItem();
+      Integer quantityNeeded = (int) Math.ceil(menuInventory.getQuantityNeeded());
+      Integer totalQuantityConsumed = quantityNeeded * orderQuantity;
+
+      if (inventoryItem.getQuantity() < totalQuantityConsumed) {
+        throw new InsufficientInventoryException(inventoryItem, totalQuantityConsumed);
+      }
+    }
+
+    for (MenuInventory menuInventory : menuInventoryItems) {
+      InventoryItem inventoryItem = menuInventory.getRequiredInventoryItem();
+      Integer quantityNeeded = (int) Math.ceil(menuInventory.getQuantityNeeded());
+      Integer totalQuantityConsumed = quantityNeeded * orderQuantity;
+
+      inventoryItem.setQuantity(inventoryItem.getQuantity() - totalQuantityConsumed);
+      inventoryItemRepository.save(inventoryItem);
+    }
   }
 }
