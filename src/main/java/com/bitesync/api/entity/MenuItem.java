@@ -22,6 +22,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @NoArgsConstructor
@@ -76,4 +77,8 @@ public class MenuItem {
   @JsonIgnore
   @OneToMany(mappedBy = "menuItem", cascade = CascadeType.ALL)
   private List<OrderItem> orderItems;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "requiredMenuItem", cascade = CascadeType.ALL)
+  private List<MenuInventory> menuInventoryItems;
 }

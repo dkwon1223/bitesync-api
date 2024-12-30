@@ -42,12 +42,13 @@ public class ApiApplication implements CommandLineRunner {
 
 		// Example inventory
 		InventoryItem[] inventoryItems = new InventoryItem[] {
-				new InventoryItem("Tomatoes", "https://example.com/images/tomatoes.jpg", 50, new BigDecimal("0.50"), "Produce"),
-				new InventoryItem("Chicken Breast", "https://example.com/images/chicken_breast.jpg", 20, new BigDecimal("5.99"), "Meat"),
-				new InventoryItem("Olive Oil", "https://example.com/images/olive_oil.jpg", 10, new BigDecimal("9.99"), "Condiments"),
-				new InventoryItem("Mozzarella Cheese", "https://example.com/images/mozzarella_cheese.jpg", 15, new BigDecimal("3.50"), "Dairy"),
-				new InventoryItem("French Fries", "https://example.com/images/french_fries.jpg", 30, new BigDecimal("2.99"), "Frozen Foods")
+				new InventoryItem("Buns", "https://example.com/images/buns.jpg", 1, new BigDecimal("1.50"), "Bakery"),
+				new InventoryItem("Cheese", "https://example.com/images/cheese.jpg", 1, new BigDecimal("2.00"), "Dairy"),
+				new InventoryItem("Lettuce", "https://example.com/images/lettuce.jpg", 1, new BigDecimal("0.75"), "Produce"),
+				new InventoryItem("Tomatoes", "https://example.com/images/tomatoes.jpg", 1, new BigDecimal("1.25"), "Produce"),
+				new InventoryItem("Beef Patty", "https://example.com/images/beef-patty.jpg", 1, new BigDecimal("3.50"), "Meat"),
 		};
+
 
 		for (InventoryItem inventoryItem : inventoryItems) {
 			inventoryItem.setUser(user);
@@ -56,11 +57,7 @@ public class ApiApplication implements CommandLineRunner {
 
 		// Example menu items
 		MenuItem[] menuItems = new MenuItem[] {
-				new MenuItem("Margherita Pizza", "https://example.com/images/margherita_pizza.jpg", "Classic pizza with tomato sauce, mozzarella, and fresh basil", new BigDecimal("12.99"), "Pizza", true),
-				new MenuItem("Caesar Salad", "https://example.com/images/caesar_salad.jpg", "Crisp romaine lettuce with Caesar dressing, croutons, and Parmesan cheese", new BigDecimal("8.99"), "Salads", true),
-				new MenuItem("Grilled Salmon", "https://example.com/images/grilled_salmon.jpg", "Freshly grilled salmon served with seasonal vegetables", new BigDecimal("19.99"), "Entrees", true),
-				new MenuItem("Chocolate Lava Cake", "https://example.com/images/chocolate_lava_cake.jpg", "Warm chocolate cake with a gooey molten center, served with vanilla ice cream", new BigDecimal("6.99"), "Desserts", true),
-				new MenuItem("Iced Coffee", "https://example.com/images/iced_coffee.jpg", "Refreshing iced coffee made with premium beans", new BigDecimal("3.99"), "Beverages", true)
+				new MenuItem("Cheeseburger", "https://example.com/images/cheeseburger.jpg", "A delicious cheeseburger with fresh lettuce, tomato, and cheese.", new BigDecimal("9.99"), "Burgers", true),
 		};
 
 		for (MenuItem menuItem : menuItems) {
