@@ -38,18 +38,16 @@ public class OrderItem {
   @Column(name = "quantity")
   private Integer quantity;
 
-  @NonNull
   @NotNull(message = "order item subtotal cannot be null")
   @Positive(message = "order item subtotal must be greater than 0")
-  @Column(name = "subtotal")
-  private BigDecimal subtotal;
+  @Column(name = "subtotal", columnDefinition = "DECIMAL(10,2) DEFAULT 0.00")
+  private BigDecimal subtotal = BigDecimal.ZERO;
 
   @JsonIgnore
   @ManyToOne(optional = false)
   @JoinColumn(referencedColumnName = "id", name = "order_id")
   private Order order;
 
-  @JsonIgnore
   @ManyToOne(optional = false)
   @JoinColumn(referencedColumnName = "id", name = "menu_item_id")
   private MenuItem menuItem;

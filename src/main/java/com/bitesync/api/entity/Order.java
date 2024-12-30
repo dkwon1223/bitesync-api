@@ -53,10 +53,9 @@ public class Order {
   @Column(name = "status")
   private OrderStatus status;
 
-  @NonNull
   @NotNull(message = "order total cannot be null")
-  @Column(name = "total")
-  private BigDecimal total;
+  @Column(name = "total", columnDefinition = "DECIMAL(10,2) DEFAULT 0.00")
+  private BigDecimal total = BigDecimal.ZERO;
 
   @CreationTimestamp
   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

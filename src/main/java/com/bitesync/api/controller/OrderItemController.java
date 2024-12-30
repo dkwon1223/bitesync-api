@@ -39,9 +39,9 @@ public class OrderItemController {
     return new ResponseEntity<>(orderItemService.findOrderItemById(id), HttpStatus.OK);
   }
 
-  @PostMapping("/order/{orderId}")
-  public ResponseEntity<OrderItem> createOrderItem(@PathVariable Long orderId, @Valid @RequestBody OrderItem orderItem) {
-    return new ResponseEntity<>(orderItemService.save(orderId, orderItem), HttpStatus.CREATED);
+  @PostMapping("/user/{userId}/order/{orderId}/menu-item/{menuItemId}")
+  public ResponseEntity<OrderItem> createOrderItem(@PathVariable Long userId, @PathVariable Long orderId, @PathVariable Long menuItemId, @Valid @RequestBody OrderItem orderItem) {
+    return new ResponseEntity<>(orderItemService.save(userId, orderId, menuItemId, orderItem), HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")

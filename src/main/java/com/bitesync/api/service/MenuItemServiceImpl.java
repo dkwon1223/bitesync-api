@@ -27,7 +27,7 @@ public class MenuItemServiceImpl implements MenuItemService {
   @Override
   public MenuItem findMenuItemByUserIdAndMenuItemId(Long userId, Long menuItemId) throws MenuItemNotFoundException {
     Optional<User> user = userRepository.findById(userId);
-    User targetUser = userServiceImpl.unwrapUser(user, userId);
+    User targetUser = UserServiceImpl.unwrapUser(user, userId);
     Optional<MenuItem> menuItem = menuItemRepository.findMenuItemByUserIdAndId(menuItemId, targetUser.getId());
     return unwrapMenuItem(menuItem, userId, menuItemId);
   }
@@ -35,14 +35,14 @@ public class MenuItemServiceImpl implements MenuItemService {
   @Override
   public List<MenuItem> findMenuItemsByUserId(Long userId) {
     Optional<User> user = userRepository.findById(userId);
-    User targetUser = userServiceImpl.unwrapUser(user, userId);
+    User targetUser = UserServiceImpl.unwrapUser(user, userId);
     return targetUser.getMenuItems();
   }
 
   @Override
   public MenuItem saveMenuItem(Long userId, MenuItem menuItem) {
     Optional<User> user = userRepository.findById(userId);
-    User targetUser = userServiceImpl.unwrapUser(user, userId);
+    User targetUser = UserServiceImpl.unwrapUser(user, userId);
     menuItem.setUser(targetUser);
     return menuItemRepository.save(menuItem);
   }
