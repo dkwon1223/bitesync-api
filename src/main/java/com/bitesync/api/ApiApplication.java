@@ -64,18 +64,18 @@ public class ApiApplication implements CommandLineRunner {
 		burger.setUser(user);
 		menuItemRepository.save(burger);
 
-		MenuInventory[] requiredIngredients = new MenuInventory[] {
-				new MenuInventory(1),
-				new MenuInventory(1),
-				new MenuInventory(1),
-				new MenuInventory(1),
-				new MenuInventory(1),
-		};
-
-		for(int i = 0; i < inventoryItems.length; i++) {
-			requiredIngredients[i].setRequiredInventoryItem(inventoryItems[i]);
-			requiredIngredients[i].setRequiredMenuItem(burger);
-			menuInventoryRepository.save(requiredIngredients[i]);
-		}
+//		MenuInventory[] requiredIngredients = new MenuInventory[] {
+//				new MenuInventory(1),
+//				new MenuInventory(1),
+//				new MenuInventory(1),
+//				new MenuInventory(1),
+//				new MenuInventory(1),
+//		};
+//
+//		for(int i = 0; i < inventoryItems.length; i++) {
+//			requiredIngredients[i].setRequiredInventoryItem(inventoryItems[i]);
+//			requiredIngredients[i].setRequiredMenuItem(burger);
+//			menuInventoryRepository.save(requiredIngredients[i]);
+//		}
 	}
 }

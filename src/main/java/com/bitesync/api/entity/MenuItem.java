@@ -59,6 +59,9 @@ public class MenuItem {
   @Column(name = "price")
   private BigDecimal price;
 
+  @Column(name = "cost_to_make")
+  private BigDecimal costToMake = BigDecimal.ZERO;
+
   @NonNull
   @NotBlank(message = "menu item category cannot be blank")
   @Column(name = "category")
