@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface MenuInventoryRepository extends CrudRepository<MenuInventory, Long> {
   List<MenuInventory> findByRequiredMenuItem(MenuItem menuItem);
+  List<MenuInventory> findByRequiredMenuItemId(Long menuItemId);
 }

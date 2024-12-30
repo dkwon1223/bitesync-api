@@ -85,6 +85,18 @@ public class OrderItemServiceImpl implements OrderItemService {
 
   @Override
   public void deleteOrderItem(Long id) {
+    OrderItem orderItem = unwrapOrderItem(orderItemRepository.findById(id), id);
+    MenuItem menuItem = orderItem.getMenuItem();
+
+    List<MenuInventory> menuInventoryList = menuInventoryRepository.findByRequiredMenuItemId(menuItem.getId());
+    Integer orderQuantity =  orderItem.getQuantity();
+
+    for (MenuInventory menuInventory : menuInventoryList) {
+      InventoryItem inventoryItem = menuInventory.getRequiredInventoryItem();
+      int restoreQuantity = menuInventory.getQuantityNeeded() * orderQuantity;
+      inventoryItem.setQuantity(inventoryItem.getQuantity() + restoreQuantity);
+      inventoryItemRepository.save(inventoryItem);
+    }
     orderItemRepository.deleteById(id);
   }
 
