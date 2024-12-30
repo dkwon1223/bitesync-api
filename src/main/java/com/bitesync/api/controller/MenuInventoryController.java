@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,4 +33,8 @@ public class MenuInventoryController {
     return new ResponseEntity<>(menuInventoryService.createMenuInventory(userId, inventoryItemId, menuItemId, menuInventory), HttpStatus.CREATED);
   }
 
+  @PutMapping("/{id}")
+  public ResponseEntity<MenuInventory> updateMenuInventory(@PathVariable Long id, @RequestBody MenuInventory menuInventory) {
+    return new ResponseEntity<>(menuInventoryService.updateMenuInventory(id, menuInventory), HttpStatus.OK);
+  }
 }

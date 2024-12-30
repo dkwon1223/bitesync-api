@@ -3,13 +3,16 @@ package com.bitesync.api.service;
 import com.bitesync.api.entity.InventoryItem;
 import com.bitesync.api.entity.MenuInventory;
 import com.bitesync.api.entity.MenuItem;
+import com.bitesync.api.exception.EntityNotFoundException;
 import com.bitesync.api.repository.InventoryItemRepository;
 import com.bitesync.api.repository.MenuInventoryRepository;
 import com.bitesync.api.repository.MenuItemRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -35,5 +38,20 @@ public class MenuInventoryServiceImpl implements MenuInventoryService {
 
     menuInventoryRepository.save(menuInventory);
     return menuInventory;
+  }
+
+  @Override
+  public MenuInventory updateMenuInventory(Long menuInventoryId, MenuInventory menuInventory) {
+    MenuInventory targetMenuInventory = unwrapMenuInventory(menuInventoryRepository.findById(menuInventoryId), menuInventoryId);
+    targetMenuInventory.setQuantityNeeded(menuInventory.getQuantityNeeded());
+    return menuInventoryRepository.save(targetMenuInventory);
+  }
+
+  static MenuInventory unwrapMenuInventory(Optional<MenuInventory> entity, Long menuInventoryId) {
+    if(entity.isPresent()) {
+      return entity.get();
+    } else {
+      throw new EntityNotFoundException(menuInventoryId, MenuInventory.class);
+    }
   }
 }
