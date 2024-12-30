@@ -2,6 +2,7 @@ package com.bitesync.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
@@ -25,6 +27,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -78,4 +81,8 @@ public class InventoryItem {
   @ManyToOne(optional = false)
   @JoinColumn(referencedColumnName = "id", name = "user_id")
   private User user;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "inventoryItem", cascade = CascadeType.ALL)
+  private Set<MenuInventory> menuInventories;
 }
