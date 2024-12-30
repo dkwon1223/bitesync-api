@@ -33,7 +33,7 @@ public class MenuInventory {
   @NonNull
   @NotNull(message = "quantity needed cannot be null")
   @Column(name = "quantity_needed")
-  private double quantityNeeded;
+  private Integer quantityNeeded;
 
 
   @ManyToOne(optional = false)

@@ -1,6 +1,7 @@
 package com.bitesync.api.security.filter;
 
 import com.bitesync.api.exception.EntityNotFoundException;
+import com.bitesync.api.exception.InsufficientInventoryException;
 import com.bitesync.api.exception.MenuItemNotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

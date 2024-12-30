@@ -28,7 +28,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -57,7 +56,7 @@ public class InventoryItem {
   @NotNull(message = "inventory item quantity cannot be null")
   @PositiveOrZero(message = "quantity must be 0 or greater")
   @Column(name = "quantity")
-  private double quantity;
+  private Integer quantity;
 
   @NonNull
   @NotNull(message = "inventory item unit price cannot be null")
