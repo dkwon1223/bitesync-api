@@ -45,10 +45,12 @@ public class OrderItemServiceImpl implements OrderItemService {
     MenuItem targetMenuItem = MenuItemServiceImpl.unwrapMenuItem(menuItemRepository.findById(menuItemId), userId, menuItemId);
     BigDecimal price = targetMenuItem.getPrice();
     BigDecimal quantity = BigDecimal.valueOf(orderItem.getQuantity());
+
     orderItem.setSubtotal(price.multiply(quantity));
     orderItem.setMenuItem(targetMenuItem);
 
     Order targetOrder = OrderServiceImpl.unwrapOrder(orderRepository.findById(orderId), orderId);
+    targetOrder.setTotal(price.add(orderItem.getSubtotal()));
     orderItem.setOrder(targetOrder);
 
     return orderItemRepository.save(orderItem);
