@@ -9,6 +9,8 @@ import com.bitesync.api.repository.MenuItemRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class MenuInventoryServiceImpl implements MenuInventoryService {
@@ -18,12 +20,18 @@ public class MenuInventoryServiceImpl implements MenuInventoryService {
   private MenuInventoryRepository menuInventoryRepository;
 
   @Override
+  public List<MenuInventory> getMenuInventory(Long userId, Long menuItemId) {
+    MenuItem targetMenuItem  = MenuItemServiceImpl.unwrapMenuItem(menuItemRepository.findById(menuItemId), userId, menuItemId);
+    return targetMenuItem.getMenuInventoryItems();
+  }
+
+  @Override
   public MenuInventory createMenuInventory(Long userId, Long inventoryItemId, Long menuItemId, MenuInventory menuInventory) {
     InventoryItem targetInventoryItem = InventoryItemServiceImpl.unwrapInventoryItem(inventoryItemRepository.findById(inventoryItemId), userId, inventoryItemId);
     MenuItem targetMenuItem = MenuItemServiceImpl.unwrapMenuItem(menuItemRepository.findById(menuItemId), userId, menuItemId);
 
-    targetInventoryItem.getMenuInventories().add(menuInventory);
-    targetMenuItem.getMenuInventories().add(menuInventory);
+    menuInventory.setRequiredInventoryItem(targetInventoryItem);
+    menuInventory.setRequiredMenuItem(targetMenuItem);
 
     menuInventoryRepository.save(menuInventory);
     return menuInventory;

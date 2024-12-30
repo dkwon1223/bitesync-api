@@ -76,9 +76,9 @@ public class MenuItem {
 
   @JsonIgnore
   @OneToMany(mappedBy = "menuItem", cascade = CascadeType.ALL)
-  private Set<OrderItem> orderItems;
+  private List<OrderItem> orderItems;
 
   @JsonIgnore
-  @OneToMany(mappedBy = "menuItem", cascade = CascadeType.ALL)
-  private Set<MenuInventory> menuInventories;
+  @OneToMany(mappedBy = "requiredMenuItem", cascade = CascadeType.ALL)
+  private List<MenuInventory> menuInventoryItems;
 }

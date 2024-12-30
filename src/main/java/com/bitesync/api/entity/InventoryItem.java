@@ -27,6 +27,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -34,9 +35,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "inventory_item", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"name", "user_id"})
-})
+@Table(name = "inventory_item")
 public class InventoryItem {
 
   @Id
@@ -83,6 +82,6 @@ public class InventoryItem {
   private User user;
 
   @JsonIgnore
-  @OneToMany(mappedBy = "inventoryItem", cascade = CascadeType.ALL)
-  private Set<MenuInventory> menuInventories;
+  @OneToMany(mappedBy = "requiredInventoryItem", cascade = CascadeType.ALL)
+  private List<MenuInventory> menuInventoryItems;
 }
