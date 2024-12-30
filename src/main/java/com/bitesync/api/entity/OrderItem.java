@@ -48,4 +48,9 @@ public class OrderItem {
   @ManyToOne(optional = false)
   @JoinColumn(referencedColumnName = "id", name = "order_id")
   private Order order;
+
+  @JsonIgnore
+  @ManyToOne(optional = false)
+  @JoinColumn(referencedColumnName = "id", name = "menu_item_id")
+  private MenuItem menuItem;
 }
