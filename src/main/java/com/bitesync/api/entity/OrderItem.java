@@ -38,8 +38,6 @@ public class OrderItem {
   @Column(name = "quantity")
   private Integer quantity;
 
-  @NotNull(message = "order item subtotal cannot be null")
-  @Positive(message = "order item subtotal must be greater than 0")
   @Column(name = "subtotal", columnDefinition = "DECIMAL(10,2) DEFAULT 0.00")
   private BigDecimal subtotal = BigDecimal.ZERO;
 

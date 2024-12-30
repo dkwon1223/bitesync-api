@@ -50,10 +50,11 @@ public class OrderItemServiceImpl implements OrderItemService {
     orderItem.setMenuItem(targetMenuItem);
 
     Order targetOrder = OrderServiceImpl.unwrapOrder(orderRepository.findById(orderId), orderId);
-    targetOrder.setTotal(price.add(orderItem.getSubtotal()));
     orderItem.setOrder(targetOrder);
+    orderItemRepository.save(orderItem);
+    updateOrderTotal(targetOrder);
 
-    return orderItemRepository.save(orderItem);
+    return orderItem;
   }
 
   @Override
@@ -78,5 +79,18 @@ public class OrderItemServiceImpl implements OrderItemService {
     } else {
       throw new EntityNotFoundException(id, OrderItem.class);
     }
+  }
+
+  private void updateOrderTotal(Order order) {
+
+    List<OrderItem> orderItems = orderItemRepository.findByOrderId(order.getId());
+
+    BigDecimal total = orderItems.stream()
+        .map(OrderItem::getSubtotal)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    order.setTotal(total);
+
+    orderRepository.save(order);
   }
 }

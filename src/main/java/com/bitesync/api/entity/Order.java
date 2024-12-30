@@ -47,11 +47,9 @@ public class Order {
   @Column(name = "customer_name")
   private String customerName;
 
-  @NonNull
-  @NotNull(message = "order status cannot be null")
   @Enumerated(EnumType.STRING)
   @Column(name = "status")
-  private OrderStatus status;
+  private OrderStatus status = OrderStatus.PENDING;
 
   @NotNull(message = "order total cannot be null")
   @Column(name = "total", columnDefinition = "DECIMAL(10,2) DEFAULT 0.00")
