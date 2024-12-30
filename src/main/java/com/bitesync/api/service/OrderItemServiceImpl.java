@@ -1,11 +1,16 @@
 package com.bitesync.api.service;
 
+import com.bitesync.api.entity.MenuItem;
+import com.bitesync.api.entity.Order;
 import com.bitesync.api.entity.OrderItem;
 import com.bitesync.api.exception.EntityNotFoundException;
+import com.bitesync.api.repository.MenuItemRepository;
 import com.bitesync.api.repository.OrderItemRepository;
+import com.bitesync.api.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,10 +19,18 @@ import java.util.Optional;
 public class OrderItemServiceImpl implements OrderItemService {
 
   private OrderItemRepository orderItemRepository;
+  private OrderRepository orderRepository;
+  private MenuItemRepository menuItemRepository;
 
   @Override
   public List<OrderItem> findAllOrderItems() {
     return (List<OrderItem>) orderItemRepository.findAll();
+  }
+
+  @Override
+  public List<OrderItem> findOrderItemsByOrderId(Long orderId) {
+    Order targetOrder = OrderServiceImpl.unwrapOrder(orderRepository.findById(orderId), orderId);
+    return orderItemRepository.findByOrderId(targetOrder.getId());
   }
 
   @Override
@@ -27,8 +40,21 @@ public class OrderItemServiceImpl implements OrderItemService {
   }
 
   @Override
-  public OrderItem save(OrderItem orderItem) {
-    return orderItemRepository.save(orderItem);
+  public OrderItem save(Long userId, Long orderId, Long menuItemId, OrderItem orderItem) {
+
+    MenuItem targetMenuItem = MenuItemServiceImpl.unwrapMenuItem(menuItemRepository.findById(menuItemId), userId, menuItemId);
+    BigDecimal price = targetMenuItem.getPrice();
+    BigDecimal quantity = BigDecimal.valueOf(orderItem.getQuantity());
+
+    orderItem.setSubtotal(price.multiply(quantity));
+    orderItem.setMenuItem(targetMenuItem);
+
+    Order targetOrder = OrderServiceImpl.unwrapOrder(orderRepository.findById(orderId), orderId);
+    orderItem.setOrder(targetOrder);
+    orderItemRepository.save(orderItem);
+    updateOrderTotal(targetOrder);
+
+    return orderItem;
   }
 
   @Override
@@ -53,5 +79,18 @@ public class OrderItemServiceImpl implements OrderItemService {
     } else {
       throw new EntityNotFoundException(id, OrderItem.class);
     }
+  }
+
+  private void updateOrderTotal(Order order) {
+
+    List<OrderItem> orderItems = orderItemRepository.findByOrderId(order.getId());
+
+    BigDecimal total = orderItems.stream()
+        .map(OrderItem::getSubtotal)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    order.setTotal(total);
+
+    orderRepository.save(order);
   }
 }

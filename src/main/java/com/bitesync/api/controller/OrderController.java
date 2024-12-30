@@ -29,14 +29,19 @@ public class OrderController {
     return new ResponseEntity<>(orderService.getAllOrders(), HttpStatus.OK);
   }
 
+  @GetMapping("/user/{userId}/all")
+  public ResponseEntity<List<Order>> getAllOrdersByUserId(@PathVariable Long userId) {
+    return new ResponseEntity<>(orderService.getOrdersByUserId(userId), HttpStatus.OK);
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity<Order> getOrderById(@PathVariable("id") Long id) {
     return new ResponseEntity<>(orderService.getOrderById(id), HttpStatus.OK);
   }
 
-  @PostMapping
-  public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) {
-    return new ResponseEntity<>(orderService.createOrder(order), HttpStatus.CREATED);
+  @PostMapping("/user/{userId}")
+  public ResponseEntity<Order> createOrder(@PathVariable Long userId, @Valid @RequestBody Order order) {
+    return new ResponseEntity<>(orderService.createOrder(userId, order), HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")

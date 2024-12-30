@@ -19,7 +19,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/order/item")
+@RequestMapping("/order-item")
 public class OrderItemController {
 
   private OrderItemService orderItemService;
@@ -29,14 +29,19 @@ public class OrderItemController {
     return new ResponseEntity<>(orderItemService.findAllOrderItems(), HttpStatus.OK);
   }
 
+  @GetMapping("/order/{orderId}/all")
+  public ResponseEntity<List<OrderItem>> getAllByOrderId(@PathVariable Long orderId) {
+    return new ResponseEntity<>(orderItemService.findOrderItemsByOrderId(orderId), HttpStatus.OK);
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity<OrderItem> getById(@PathVariable Long id) {
     return new ResponseEntity<>(orderItemService.findOrderItemById(id), HttpStatus.OK);
   }
 
-  @PostMapping
-  public ResponseEntity<OrderItem> createOrderItem(@Valid @RequestBody OrderItem orderItem) {
-    return new ResponseEntity<>(orderItemService.save(orderItem), HttpStatus.CREATED);
+  @PostMapping("/user/{userId}/order/{orderId}/menu-item/{menuItemId}")
+  public ResponseEntity<OrderItem> createOrderItem(@PathVariable Long userId, @PathVariable Long orderId, @PathVariable Long menuItemId, @Valid @RequestBody OrderItem orderItem) {
+    return new ResponseEntity<>(orderItemService.save(userId, orderId, menuItemId, orderItem), HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")
