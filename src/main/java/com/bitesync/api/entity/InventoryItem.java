@@ -57,7 +57,7 @@ public class InventoryItem {
   @NotNull(message = "inventory item quantity cannot be null")
   @PositiveOrZero(message = "quantity must be 0 or greater")
   @Column(name = "quantity")
-  private Integer quantity;
+  private double quantity;
 
   @NonNull
   @NotNull(message = "inventory item unit price cannot be null")

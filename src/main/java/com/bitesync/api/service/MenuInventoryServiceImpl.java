@@ -47,6 +47,11 @@ public class MenuInventoryServiceImpl implements MenuInventoryService {
     return menuInventoryRepository.save(targetMenuInventory);
   }
 
+  @Override
+  public void deleteMenuInventory(Long menuItemId) {
+    menuItemRepository.deleteById(menuItemId);
+  }
+
   static MenuInventory unwrapMenuInventory(Optional<MenuInventory> entity, Long menuInventoryId) {
     if(entity.isPresent()) {
       return entity.get();

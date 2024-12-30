@@ -1,9 +1,13 @@
 package com.bitesync.api.service;
 
+import com.bitesync.api.entity.InventoryItem;
+import com.bitesync.api.entity.MenuInventory;
 import com.bitesync.api.entity.MenuItem;
 import com.bitesync.api.entity.Order;
 import com.bitesync.api.entity.OrderItem;
 import com.bitesync.api.exception.EntityNotFoundException;
+import com.bitesync.api.repository.InventoryItemRepository;
+import com.bitesync.api.repository.MenuInventoryRepository;
 import com.bitesync.api.repository.MenuItemRepository;
 import com.bitesync.api.repository.OrderItemRepository;
 import com.bitesync.api.repository.OrderRepository;
@@ -21,6 +25,8 @@ public class OrderItemServiceImpl implements OrderItemService {
   private OrderItemRepository orderItemRepository;
   private OrderRepository orderRepository;
   private MenuItemRepository menuItemRepository;
+  private InventoryItemRepository inventoryItemRepository;
+  private MenuInventoryRepository menuInventoryRepository;
 
   @Override
   public List<OrderItem> findAllOrderItems() {
@@ -53,6 +59,16 @@ public class OrderItemServiceImpl implements OrderItemService {
     orderItem.setOrder(targetOrder);
     orderItemRepository.save(orderItem);
     updateOrderTotal(targetOrder);
+
+    List<MenuInventory> menuInventoryItems = menuInventoryRepository.findByRequiredMenuItem(targetMenuItem);
+
+    for (MenuInventory menuInventory : menuInventoryItems) {
+      InventoryItem inventoryItem = menuInventory.getRequiredInventoryItem();
+      double quantityNeeded = menuInventory.getQuantityNeeded();
+      double totalQuantityConsumed = quantityNeeded * orderItem.getQuantity();
+      inventoryItem.setQuantity(inventoryItem.getQuantity() - totalQuantityConsumed);
+      inventoryItemRepository.save(inventoryItem);
+    }
 
     return orderItem;
   }
