@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface OrderItemRepository extends CrudRepository<OrderItem, Long> {
   Optional<OrderItem> findById(Long id);
-  List<OrderItem> findByOrderId(Long orderId);
+  List<OrderItem> findOrderItemsByOrderId(Long orderId);
 }

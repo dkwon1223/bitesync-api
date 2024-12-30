@@ -38,7 +38,7 @@ public class OrderItemServiceImpl implements OrderItemService {
   @Override
   public List<OrderItem> findOrderItemsByOrderId(Long orderId) {
     Order targetOrder = OrderServiceImpl.unwrapOrder(orderRepository.findById(orderId), orderId);
-    return orderItemRepository.findByOrderId(targetOrder.getId());
+    return orderItemRepository.findOrderItemsByOrderId(targetOrder.getId());
   }
 
   @Override
@@ -63,12 +63,11 @@ public class OrderItemServiceImpl implements OrderItemService {
 
       updateInventory(targetMenuItem, quantity);
 
-      updateOrderTotal(targetOrder);
-
       orderItemRepository.save(orderItem);
 
-      return orderItem;
+      updateOrderTotal(targetOrder);
 
+      return orderItem;
   }
 
 
@@ -88,15 +87,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     OrderItem orderItem = unwrapOrderItem(orderItemRepository.findById(id), id);
     MenuItem menuItem = orderItem.getMenuItem();
 
-    List<MenuInventory> menuInventoryList = menuInventoryRepository.findByRequiredMenuItemId(menuItem.getId());
-    Integer orderQuantity =  orderItem.getQuantity();
-
-    for (MenuInventory menuInventory : menuInventoryList) {
-      InventoryItem inventoryItem = menuInventory.getRequiredInventoryItem();
-      int restoreQuantity = menuInventory.getQuantityNeeded() * orderQuantity;
-      inventoryItem.setQuantity(inventoryItem.getQuantity() + restoreQuantity);
-      inventoryItemRepository.save(inventoryItem);
-    }
+    restoreInventory(menuItem, orderItem);
     orderItemRepository.deleteById(id);
   }
 
@@ -110,7 +101,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
   private void updateOrderTotal(Order order) {
 
-    List<OrderItem> orderItems = orderItemRepository.findByOrderId(order.getId());
+    List<OrderItem> orderItems = orderItemRepository.findOrderItemsByOrderId(order.getId());
 
     BigDecimal total = orderItems.stream()
         .map(OrderItem::getSubtotal)
@@ -143,4 +134,17 @@ public class OrderItemServiceImpl implements OrderItemService {
       inventoryItemRepository.save(inventoryItem);
     }
   }
+
+  private void restoreInventory(MenuItem menuItem, OrderItem orderItem) {
+    List<MenuInventory> menuInventoryList = menuInventoryRepository.findByRequiredMenuItemId(menuItem.getId());
+    Integer orderQuantity =  orderItem.getQuantity();
+
+    for (MenuInventory menuInventory : menuInventoryList) {
+      InventoryItem inventoryItem = menuInventory.getRequiredInventoryItem();
+      int restoreQuantity = menuInventory.getQuantityNeeded() * orderQuantity;
+      inventoryItem.setQuantity(inventoryItem.getQuantity() + restoreQuantity);
+      inventoryItemRepository.save(inventoryItem);
+    }
+  }
+
 }
