@@ -4,6 +4,6 @@ import com.bitesync.api.entity.User;
 
 public interface UserService {
     void signupUser(User user);
-    User getUserByUsername(String username);
+    User getUserByEmail(String email);
     User getById(Long id);
 }

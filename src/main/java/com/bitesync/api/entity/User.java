@@ -2,6 +2,7 @@ package com.bitesync.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
@@ -12,7 +13,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "email")
+})
 public class User {
 
     @Id
@@ -21,9 +24,10 @@ public class User {
     private Long id;
 
     @NonNull
-    @NotEmpty(message = "username cannot be empty")
+    @NotEmpty(message = "email cannot be empty")
+    @Email(message = "email must be valid")
     @Column(name = "username")
-    private String username;
+    private String email;
 
     @NonNull
     @NotEmpty(message = "password cannot be empty")
