@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.bitesync.api.exception.DuplicateUserException;
 import com.bitesync.api.exception.EntityNotFoundException;
 import com.bitesync.api.exception.ErrorResponse;
 import com.bitesync.api.exception.InsufficientInventoryException;
@@ -42,6 +43,12 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
   @ExceptionHandler(MenuItemUnavailableException.class)
   public ResponseEntity<ErrorResponse> handleMenuItemUnavailable(MenuItemUnavailableException ex) {
+    ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
+    return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(DuplicateUserException.class)
+  public ResponseEntity<ErrorResponse> handleDuplicateUser(DuplicateUserException ex) {
     ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
     return new ResponseEntity<>(error, HttpStatus.CONFLICT);
   }

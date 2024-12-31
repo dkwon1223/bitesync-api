@@ -1,6 +1,7 @@
 package com.bitesync.api.service;
 
 import com.bitesync.api.entity.User;
+import com.bitesync.api.exception.DuplicateUserException;
 import com.bitesync.api.exception.EntityNotFoundException;
 import com.bitesync.api.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void signupUser(User user) {
+        if(userRepository.existsByUsername(user.getUsername())) {
+            throw new DuplicateUserException(user.getUsername());
+        }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
