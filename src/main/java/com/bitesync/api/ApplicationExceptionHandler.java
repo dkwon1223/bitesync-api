@@ -9,6 +9,7 @@ import com.bitesync.api.exception.ErrorResponse;
 import com.bitesync.api.exception.InsufficientInventoryException;
 import com.bitesync.api.exception.InventoryItemNotFoundException;
 import com.bitesync.api.exception.MenuItemNotFoundException;
+import com.bitesync.api.exception.MenuItemUnavailableException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -35,6 +36,12 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
   @ExceptionHandler(InsufficientInventoryException.class)
   public ResponseEntity<ErrorResponse> handleInsufficientInventory(InsufficientInventoryException ex) {
+    ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
+    return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(MenuItemUnavailableException.class)
+  public ResponseEntity<ErrorResponse> handleMenuItemUnavailable(MenuItemUnavailableException ex) {
     ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
     return new ResponseEntity<>(error, HttpStatus.CONFLICT);
   }

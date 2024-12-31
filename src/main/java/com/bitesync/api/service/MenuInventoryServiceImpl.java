@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,9 @@ public class MenuInventoryServiceImpl implements MenuInventoryService {
     menuInventory.setRequiredMenuItem(targetMenuItem);
 
     menuInventoryRepository.save(menuInventory);
+
+    updateMenuItemCostToMake(targetMenuItem);
+
     return menuInventory;
   }
 
@@ -50,6 +54,24 @@ public class MenuInventoryServiceImpl implements MenuInventoryService {
   @Override
   public void deleteMenuInventory(Long menuItemId) {
     menuItemRepository.deleteById(menuItemId);
+  }
+
+  private void updateMenuItemCostToMake(MenuItem menuItem) {
+    List<MenuInventory> menuInventories = menuInventoryRepository.findByRequiredMenuItemId(menuItem.getId());
+
+    BigDecimal totalCost = BigDecimal.ZERO;
+
+    for (MenuInventory menuInventory : menuInventories) {
+      InventoryItem inventoryItem = menuInventory.getRequiredInventoryItem();
+      BigDecimal unitPrice = inventoryItem.getUnitPrice();
+      BigDecimal quantityNeeded = BigDecimal.valueOf(menuInventory.getQuantityNeeded());
+
+      totalCost = totalCost.add(unitPrice.multiply(quantityNeeded));
+    }
+
+    menuItem.setCostToMake(totalCost);
+
+    menuItemRepository.save(menuItem);
   }
 
   static MenuInventory unwrapMenuInventory(Optional<MenuInventory> entity, Long menuInventoryId) {

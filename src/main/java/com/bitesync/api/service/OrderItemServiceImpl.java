@@ -7,6 +7,7 @@ import com.bitesync.api.entity.Order;
 import com.bitesync.api.entity.OrderItem;
 import com.bitesync.api.exception.EntityNotFoundException;
 import com.bitesync.api.exception.InsufficientInventoryException;
+import com.bitesync.api.exception.MenuItemUnavailableException;
 import com.bitesync.api.repository.InventoryItemRepository;
 import com.bitesync.api.repository.MenuInventoryRepository;
 import com.bitesync.api.repository.MenuItemRepository;
@@ -24,6 +25,7 @@ import java.util.Optional;
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
 
+  private final MenuItemServiceImpl menuItemServiceImpl;
   private OrderItemRepository orderItemRepository;
   private OrderRepository orderRepository;
   private MenuItemRepository menuItemRepository;
@@ -38,7 +40,7 @@ public class OrderItemServiceImpl implements OrderItemService {
   @Override
   public List<OrderItem> findOrderItemsByOrderId(Long orderId) {
     Order targetOrder = OrderServiceImpl.unwrapOrder(orderRepository.findById(orderId), orderId);
-    return orderItemRepository.findByOrderId(targetOrder.getId());
+    return orderItemRepository.findOrderItemsByOrderId(targetOrder.getId());
   }
 
   @Override
@@ -52,6 +54,9 @@ public class OrderItemServiceImpl implements OrderItemService {
   public OrderItem save(Long userId, Long orderId, Long menuItemId, OrderItem orderItem) {
 
       MenuItem targetMenuItem = MenuItemServiceImpl.unwrapMenuItem(menuItemRepository.findById(menuItemId), userId, menuItemId);
+      if(!targetMenuItem.getAvailable()) {
+        throw new MenuItemUnavailableException(menuItemId, targetMenuItem.getName());
+      }
       BigDecimal price = targetMenuItem.getPrice();
       Integer quantity = orderItem.getQuantity();
 
@@ -62,13 +67,13 @@ public class OrderItemServiceImpl implements OrderItemService {
       orderItem.setOrder(targetOrder);
 
       updateInventory(targetMenuItem, quantity);
-
-      updateOrderTotal(targetOrder);
+      menuItemServiceImpl.updateMenuItemAvailability(userId, menuItemId);
 
       orderItemRepository.save(orderItem);
 
-      return orderItem;
+      updateOrderTotal(targetOrder);
 
+      return orderItem;
   }
 
 
@@ -85,6 +90,10 @@ public class OrderItemServiceImpl implements OrderItemService {
 
   @Override
   public void deleteOrderItem(Long id) {
+    OrderItem orderItem = unwrapOrderItem(orderItemRepository.findById(id), id);
+    MenuItem menuItem = orderItem.getMenuItem();
+
+    restoreInventory(menuItem, orderItem);
     orderItemRepository.deleteById(id);
   }
 
@@ -98,7 +107,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
   private void updateOrderTotal(Order order) {
 
-    List<OrderItem> orderItems = orderItemRepository.findByOrderId(order.getId());
+    List<OrderItem> orderItems = orderItemRepository.findOrderItemsByOrderId(order.getId());
 
     BigDecimal total = orderItems.stream()
         .map(OrderItem::getSubtotal)
@@ -131,4 +140,17 @@ public class OrderItemServiceImpl implements OrderItemService {
       inventoryItemRepository.save(inventoryItem);
     }
   }
+
+  private void restoreInventory(MenuItem menuItem, OrderItem orderItem) {
+    List<MenuInventory> menuInventoryList = menuInventoryRepository.findByRequiredMenuItemId(menuItem.getId());
+    Integer orderQuantity =  orderItem.getQuantity();
+
+    for (MenuInventory menuInventory : menuInventoryList) {
+      InventoryItem inventoryItem = menuInventory.getRequiredInventoryItem();
+      int restoreQuantity = menuInventory.getQuantityNeeded() * orderQuantity;
+      inventoryItem.setQuantity(inventoryItem.getQuantity() + restoreQuantity);
+      inventoryItemRepository.save(inventoryItem);
+    }
+  }
+
 }
