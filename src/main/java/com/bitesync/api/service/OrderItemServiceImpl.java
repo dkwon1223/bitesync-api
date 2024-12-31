@@ -7,6 +7,7 @@ import com.bitesync.api.entity.Order;
 import com.bitesync.api.entity.OrderItem;
 import com.bitesync.api.exception.EntityNotFoundException;
 import com.bitesync.api.exception.InsufficientInventoryException;
+import com.bitesync.api.exception.MenuItemUnavailableException;
 import com.bitesync.api.repository.InventoryItemRepository;
 import com.bitesync.api.repository.MenuInventoryRepository;
 import com.bitesync.api.repository.MenuItemRepository;
@@ -24,6 +25,7 @@ import java.util.Optional;
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
 
+  private final MenuItemServiceImpl menuItemServiceImpl;
   private OrderItemRepository orderItemRepository;
   private OrderRepository orderRepository;
   private MenuItemRepository menuItemRepository;
@@ -52,6 +54,9 @@ public class OrderItemServiceImpl implements OrderItemService {
   public OrderItem save(Long userId, Long orderId, Long menuItemId, OrderItem orderItem) {
 
       MenuItem targetMenuItem = MenuItemServiceImpl.unwrapMenuItem(menuItemRepository.findById(menuItemId), userId, menuItemId);
+      if(!targetMenuItem.getAvailable()) {
+        throw new MenuItemUnavailableException(menuItemId, targetMenuItem.getName());
+      }
       BigDecimal price = targetMenuItem.getPrice();
       Integer quantity = orderItem.getQuantity();
 
@@ -62,6 +67,7 @@ public class OrderItemServiceImpl implements OrderItemService {
       orderItem.setOrder(targetOrder);
 
       updateInventory(targetMenuItem, quantity);
+      menuItemServiceImpl.updateMenuItemAvailability(userId, menuItemId);
 
       orderItemRepository.save(orderItem);
 

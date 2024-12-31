@@ -1,8 +1,11 @@
 package com.bitesync.api.service;
 
+import com.bitesync.api.entity.InventoryItem;
+import com.bitesync.api.entity.MenuInventory;
 import com.bitesync.api.entity.MenuItem;
 import com.bitesync.api.entity.User;
 import com.bitesync.api.exception.MenuItemNotFoundException;
+import com.bitesync.api.repository.MenuInventoryRepository;
 import com.bitesync.api.repository.MenuItemRepository;
 import com.bitesync.api.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -17,7 +20,7 @@ public class MenuItemServiceImpl implements MenuItemService {
 
   private MenuItemRepository menuItemRepository;
   private UserRepository userRepository;
-  private UserServiceImpl userServiceImpl;
+  private MenuInventoryRepository menuInventoryRepository;
 
   @Override
   public List<MenuItem> findAllMenuItems() {
@@ -73,6 +76,23 @@ public class MenuItemServiceImpl implements MenuItemService {
     } else {
       throw new MenuItemNotFoundException(userId, menuItemId);
     }
+  }
+
+  public void updateMenuItemAvailability(Long userId, Long menuItemId) {
+    List<MenuInventory> menuInventoryList = menuInventoryRepository.findByRequiredMenuItemId(menuItemId);
+
+    boolean isAvailable = menuInventoryList.stream()
+        .allMatch(menuInventory -> {
+          InventoryItem inventoryItem = menuInventory.getRequiredInventoryItem();
+          return inventoryItem.getQuantity() >= menuInventory.getQuantityNeeded();
+        });
+
+    MenuItem menuItem = menuItemRepository.findById(menuItemId)
+        .orElseThrow(() -> new MenuItemNotFoundException(userId, menuItemId));
+
+    menuItem.setAvailable(isAvailable);
+
+    updateMenuItem(userId, menuItemId, menuItem);
   }
 
 }
