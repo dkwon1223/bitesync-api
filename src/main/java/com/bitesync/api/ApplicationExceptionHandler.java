@@ -8,6 +8,7 @@ import com.bitesync.api.exception.DuplicateUserException;
 import com.bitesync.api.exception.EntityNotFoundException;
 import com.bitesync.api.exception.ErrorResponse;
 import com.bitesync.api.exception.InsufficientInventoryException;
+import com.bitesync.api.exception.InvalidPasswordException;
 import com.bitesync.api.exception.InventoryItemNotFoundException;
 import com.bitesync.api.exception.MenuItemNotFoundException;
 import com.bitesync.api.exception.MenuItemUnavailableException;
@@ -49,6 +50,12 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
   @ExceptionHandler(DuplicateUserException.class)
   public ResponseEntity<ErrorResponse> handleDuplicateUser(DuplicateUserException ex) {
+    ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
+    return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(InvalidPasswordException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidPassword(InvalidPasswordException ex) {
     ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
     return new ResponseEntity<>(error, HttpStatus.CONFLICT);
   }

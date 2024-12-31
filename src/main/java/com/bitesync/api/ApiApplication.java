@@ -46,7 +46,7 @@ public class ApiApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 
 		// Example user
-		User user = new User("dingus", "fart");
+		User user = new User("dingus@gmail.com", "Fart!1234");
 		user.setPassword(bCryptPasswordEncoder().encode(user.getPassword()));
 		userRepository.save(user);
 
