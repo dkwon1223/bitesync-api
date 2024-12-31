@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -20,8 +19,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void signupUser(User user) {
-        if(userRepository.existsByUsername(user.getUsername())) {
-            throw new DuplicateUserException(user.getUsername());
+        if(userRepository.existsByUsername(user.getEmail())) {
+            throw new DuplicateUserException(user.getEmail());
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
