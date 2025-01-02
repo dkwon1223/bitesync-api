@@ -7,6 +7,7 @@ import com.bitesync.api.security.manager.CustomAuthenticationManager;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -17,6 +18,7 @@ import org.springframework.security.web.access.intercept.AuthorizationFilter;
 public class SecurityConfig {
 
     private CustomAuthenticationManager customAuthenticationManager;
+    private CustomCorsConfig customCorsConfig;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -24,6 +26,7 @@ public class SecurityConfig {
         authenticationFilter.setFilterProcessesUrl("/user/authenticate");
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(customCorsConfig))
                 .headers((headers) -> headers
                         .frameOptions(frameOptions -> frameOptions.disable())
                 )
