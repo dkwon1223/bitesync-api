@@ -40,31 +40,31 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
   @ExceptionHandler(InsufficientInventoryException.class)
   public ResponseEntity<ErrorResponse> handleInsufficientInventory(InsufficientInventoryException ex) {
     ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
-    return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(MenuItemUnavailableException.class)
   public ResponseEntity<ErrorResponse> handleMenuItemUnavailable(MenuItemUnavailableException ex) {
     ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
-    return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(DuplicateUserException.class)
   public ResponseEntity<ErrorResponse> handleDuplicateUser(DuplicateUserException ex) {
     ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
-    return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(InvalidPasswordException.class)
   public ResponseEntity<ErrorResponse> handleInvalidPassword(InvalidPasswordException ex) {
     ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
-    return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(BadCredentialsException.class)
   public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
     ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
-    return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    return new ResponseEntity<>(error, HttpStatus.OK);
   }
 
   @ExceptionHandler(EmptyResultDataAccessException.class)

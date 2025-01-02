@@ -1,6 +1,7 @@
 package com.bitesync.api.security;
 
 import com.bitesync.api.security.filter.AuthenticationFilter;
+import com.bitesync.api.security.filter.CustomAuthenticationEntryPoint;
 import com.bitesync.api.security.filter.ExceptionHandlerFilter;
 import com.bitesync.api.security.filter.JWTAuthorizationFilter;
 import com.bitesync.api.security.manager.CustomAuthenticationManager;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @AllArgsConstructor
@@ -19,6 +21,7 @@ public class SecurityConfig {
 
     private CustomAuthenticationManager customAuthenticationManager;
     private CustomCorsConfig customCorsConfig;
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,6 +39,9 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exceptionHandling ->
+                                       exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint)
+                )
                 .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
                 .addFilter(authenticationFilter)
                 .addFilterAfter(new JWTAuthorizationFilter(), AuthenticationFilter.class);
