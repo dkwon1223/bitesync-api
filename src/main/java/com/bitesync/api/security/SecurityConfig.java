@@ -24,7 +24,6 @@ public class SecurityConfig {
         authenticationFilter.setFilterProcessesUrl("/user/authenticate");
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.disable())
                 .headers((headers) -> headers
                         .frameOptions(frameOptions -> frameOptions.disable())
                 )
