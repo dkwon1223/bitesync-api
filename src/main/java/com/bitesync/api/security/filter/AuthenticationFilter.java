@@ -34,7 +34,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("{\"message\": \"" + e.getMessage() + "\"}");
+            throw new BadCredentialsException("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
 
