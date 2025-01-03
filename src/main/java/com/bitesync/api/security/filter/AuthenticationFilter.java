@@ -3,8 +3,11 @@ package com.bitesync.api.security.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.bitesync.api.entity.User;
+import com.bitesync.api.repository.UserRepository;
 import com.bitesync.api.security.SecurityConstants;
 import com.bitesync.api.security.manager.CustomAuthenticationManager;
+import com.bitesync.api.service.UserService;
+import com.bitesync.api.service.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,11 +22,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Optional;
 
 @AllArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private CustomAuthenticationManager customAuthenticationManager;
+    private UserRepository userRepository;
+    private UserServiceImpl userServiceImpl;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -40,8 +46,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        String userEmail = authResult.getPrincipal().toString();
+        Optional<User> user = userRepository.findByEmail(userEmail);
+        Long userId = user.get().getId();
+        User targetUser = UserServiceImpl.unwrapUser(user, userId);
         String token = JWT.create()
             .withSubject(authResult.getName())
+            .withClaim("userId", targetUser.getId())
             .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.TOKEN_EXPIRATION))
             .sign(Algorithm.HMAC512(SecurityConstants.SECRET_KEY));
         response.addHeader(SecurityConstants.AUTHORIZATION, SecurityConstants.BEARER + token);

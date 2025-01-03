@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         return unwrapUser(user, id);
     }
 
-    static User unwrapUser(Optional<User> entity, Long id) {
+    public static User unwrapUser(Optional<User> entity, Long id) {
         if(entity.isPresent()) {
             return entity.get();
         } else {
