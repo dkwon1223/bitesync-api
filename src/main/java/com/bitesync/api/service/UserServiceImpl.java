@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
                password.matches(".*[0-9].*") &&
                password.matches(".*[a-z].*") &&
                password.matches(".*[A-Z].*") &&
-               password.matches(".*[@#$%^&+=].*") &&
+               password.matches(".*[@#$%^&+=!/].*") &&
                !password.contains(" ");
     }
 }

@@ -20,6 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,45 +35,52 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
   @ExceptionHandler({EntityNotFoundException.class, MenuItemNotFoundException.class, InventoryItemNotFoundException.class, })
   public ResponseEntity<Object> handleResourceNotFoundException(RuntimeException ex) {
-    ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
+    ErrorResponse error = new ErrorResponse(ex.getMessage());
     return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler(InsufficientInventoryException.class)
   public ResponseEntity<ErrorResponse> handleInsufficientInventory(InsufficientInventoryException ex) {
-    ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
-    return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    ErrorResponse error = new ErrorResponse(ex.getMessage());
+    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(MenuItemUnavailableException.class)
   public ResponseEntity<ErrorResponse> handleMenuItemUnavailable(MenuItemUnavailableException ex) {
-    ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
-    return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    ErrorResponse error = new ErrorResponse(ex.getMessage());
+    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(DuplicateUserException.class)
   public ResponseEntity<ErrorResponse> handleDuplicateUser(DuplicateUserException ex) {
-    ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
-    return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    ErrorResponse error = new ErrorResponse(ex.getMessage());
+    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(InvalidPasswordException.class)
   public ResponseEntity<ErrorResponse> handleInvalidPassword(InvalidPasswordException ex) {
-    ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));
-    return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    ErrorResponse error = new ErrorResponse(ex.getMessage());
+    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(BadCredentialsException.class)
+  public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
+    ErrorResponse error = new ErrorResponse(ex.getMessage());
+    return new ResponseEntity<>(error, HttpStatus.OK);
   }
 
   @ExceptionHandler(EmptyResultDataAccessException.class)
   public ResponseEntity<Object> handleDataAccessException(EmptyResultDataAccessException ex) {
-    ErrorResponse error = new ErrorResponse(Arrays.asList("Cannot delete non-existing resource"));
+    ErrorResponse error = new ErrorResponse("Cannot delete non-existing resource");
     return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler(DataIntegrityViolationException.class)
   public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-    ErrorResponse error = new ErrorResponse(Arrays.asList("Data Integrity Violation: we cannot process your request."));
+    ErrorResponse error = new ErrorResponse("Data Integrity Violation: we cannot process your request.");
     return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
+
 
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -96,8 +106,15 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-    List<String> errors = new ArrayList<>();
-    ex.getBindingResult().getAllErrors().forEach((error) -> errors.add(error.getDefaultMessage()));
-    return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
+    BindingResult bindingResult = ex.getBindingResult();
+    List<String> errorMessages = new ArrayList<>();
+
+    for (FieldError fieldError : bindingResult.getFieldErrors()) {
+      errorMessages.add(fieldError.getDefaultMessage());
+    }
+
+    ErrorResponse errorResponse = new ErrorResponse(String.join(", ", errorMessages));
+
+    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
   }
 }
