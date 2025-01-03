@@ -21,6 +21,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -79,6 +81,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
+
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
     Throwable cause = ex.getCause();
@@ -103,8 +106,15 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-    String errors = new String("");
-    ex.getBindingResult().getAllErrors().forEach((error) -> errors.concat(error.getDefaultMessage()));
-    return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
+    BindingResult bindingResult = ex.getBindingResult();
+    List<String> errorMessages = new ArrayList<>();
+
+    for (FieldError fieldError : bindingResult.getFieldErrors()) {
+      errorMessages.add(fieldError.getDefaultMessage());
+    }
+
+    ErrorResponse errorResponse = new ErrorResponse(String.join(", ", errorMessages));
+
+    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
   }
 }
