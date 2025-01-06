@@ -48,7 +48,7 @@ public class InventoryItemServiceImpl implements InventoryItemService {
 
   @Override
   public InventoryItem updateInventoryItem(Long inventoryItemId, Long userId, InventoryItem inventoryItem) {
-    return inventoryItemRepository.findByUserIdAndId(inventoryItemId, userId)
+    return inventoryItemRepository.findByUserIdAndId(userId, inventoryItemId)
         .map(existingItem -> {
           existingItem.setName(inventoryItem.getName());
           existingItem.setImageUrl(inventoryItem.getImageUrl());
@@ -63,7 +63,8 @@ public class InventoryItemServiceImpl implements InventoryItemService {
 
   @Override
   public void deleteInventoryItem(Long userId, Long inventoryItemId) {
-    inventoryItemRepository.deleteInventoryItemByUserIdAndId(userId, inventoryItemId);
+    InventoryItem item = unwrapInventoryItem(inventoryItemRepository.findById(inventoryItemId), userId, inventoryItemId);
+    inventoryItemRepository.deleteInventoryItemByUserIdAndId(userId, item.getId());
   }
 
   static InventoryItem unwrapInventoryItem(Optional<InventoryItem> entity, Long userId, Long inventoryItemId) {
