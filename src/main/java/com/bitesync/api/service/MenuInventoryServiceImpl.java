@@ -3,12 +3,10 @@ package com.bitesync.api.service;
 import com.bitesync.api.entity.InventoryItem;
 import com.bitesync.api.entity.MenuInventory;
 import com.bitesync.api.entity.MenuItem;
-import com.bitesync.api.entity.User;
 import com.bitesync.api.exception.EntityNotFoundException;
 import com.bitesync.api.repository.InventoryItemRepository;
 import com.bitesync.api.repository.MenuInventoryRepository;
 import com.bitesync.api.repository.MenuItemRepository;
-import com.bitesync.api.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -53,8 +51,8 @@ public class MenuInventoryServiceImpl implements MenuInventoryService {
   }
 
   @Override
-  public void deleteMenuInventory(Long menuItemId) {
-    menuItemRepository.deleteById(menuItemId);
+  public void deleteMenuInventory(Long menuInventoryId) {
+    menuInventoryRepository.deleteById(menuInventoryId);
   }
 
   private void updateMenuItemCostToMake(MenuItem menuItem) {
