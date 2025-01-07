@@ -31,7 +31,7 @@ public class MenuItemServiceImpl implements MenuItemService {
   public MenuItem findMenuItemByUserIdAndMenuItemId(Long userId, Long menuItemId) throws MenuItemNotFoundException {
     Optional<User> user = userRepository.findById(userId);
     User targetUser = UserServiceImpl.unwrapUser(user, userId);
-    Optional<MenuItem> menuItem = menuItemRepository.findMenuItemByUserIdAndId(menuItemId, targetUser.getId());
+    Optional<MenuItem> menuItem = menuItemRepository.findMenuItemByUserIdAndId(targetUser.getId(), menuItemId);
     return unwrapMenuItem(menuItem, userId, menuItemId);
   }
 

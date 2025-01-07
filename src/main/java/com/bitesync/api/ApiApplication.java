@@ -78,11 +78,12 @@ public class ApiApplication implements CommandLineRunner {
 		}
 
 		// Example menu items
-		MenuItem burger = new MenuItem("Cheeseburger", "https://example.com/images/cheeseburger.jpg", "A delicious cheeseburger with fresh lettuce, tomato, and cheese.", new BigDecimal("9.99"), "Burgers", true);
-		MenuItem pizzaMargherita = new MenuItem("Pizza Margherita", "https://example.com/images/pizza-margherita.jpg", "Classic Italian pizza topped with fresh mozzarella, tomato sauce, basil, and a drizzle of olive oil.", new BigDecimal("12.99"),"Main Course",true
+		MenuItem burger = new MenuItem("Cheeseburger", "https://media.istockphoto.com/id/1141346679/photo/classic-cheeseburger-isolated-on-white.jpg?s=612x612&w=0&k=20&c=GC23o40q3jqcynN-RtS017yQEJDOja0khUUc2NhB3YQ=", "A delicious cheeseburger with fresh lettuce, tomato, and cheese.", new BigDecimal("14.99"), "Burgers", true);
+		MenuItem pizzaMargherita = new MenuItem("Pizza Margherita", "https://ohsweetbasil.com/wp-content/uploads/four-cheese-margherita-pizza-recipe-12-scaled.jpg", "Classic Italian pizza topped with fresh mozzarella, tomato sauce, basil, and a drizzle of olive oil.", new BigDecimal("19.99"),"Main Course",true
 		);
+		MenuItem shrek = new MenuItem("Shrek", "https://people.southwestern.edu/~bednarb/su_netWorks/projects/mcentire/shrek6.jpg", "ogre", new BigDecimal("500.37"), "Special", true );
 
-		MenuItem[] menuItems = new MenuItem[] { burger, pizzaMargherita };
+		MenuItem[] menuItems = new MenuItem[] { burger, pizzaMargherita, shrek };
 		for (MenuItem item : menuItems) {
 			item.setUser(user);
 			menuItemRepository.save(item);
