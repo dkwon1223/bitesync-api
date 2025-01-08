@@ -9,7 +9,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -32,6 +34,7 @@ public class MenuInventory {
 
   @NonNull
   @NotNull(message = "quantity needed cannot be null")
+  @Min(value = 1, message = "quantity must be at least 1")
   @Column(name = "quantity_needed")
   private Integer quantityNeeded;
 
